@@ -8,3 +8,7 @@ If this is your first time running the services locally on minikube you should r
 
 ## How to run
 By running `skaffold dev` all services will be deployed
+
+
+# update
+The update.sh script simply runs git pull on all services
