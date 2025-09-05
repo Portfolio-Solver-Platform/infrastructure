@@ -2,6 +2,11 @@ apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
   name: all
+
+build:
+  local:
+    concurrency: 0
+
 requires:
   - path: ../keycloak
   - path: ../gateway
