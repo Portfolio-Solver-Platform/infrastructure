@@ -1,2 +1,2 @@
-sh ../keycloak/bootstrap.sh
+sh ../gateway/bootstrap.sh
 
