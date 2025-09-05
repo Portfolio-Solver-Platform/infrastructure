@@ -1,0 +1,2 @@
+sh ../keycloak/bootstrap.sh
+

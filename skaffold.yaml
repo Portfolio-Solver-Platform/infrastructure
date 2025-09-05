@@ -1,0 +1,8 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: all
+requires:
+  - path: ../keycloak
+  - path: ../gateway
+  - path: ../solver-director
