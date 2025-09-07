@@ -7,7 +7,7 @@ If this is your first time running the services locally on minikube you should r
 
 
 ## How to run
-By running `skaffold dev` all services will be deployed
+By running `make dev` all services will be deployed on your local minikube
 
 
 # update
