@@ -1,5 +1,5 @@
 .ONESHELL:
-SHELL := /bin/bash
+SHELL := /bin/sh
 
 DIRS := ../solver-director ../gateway ../keycloak
 
@@ -10,15 +10,16 @@ up start:
 	trap '$(MAKE) down || true; exit 0' INT TERM
 	trap '$(MAKE) down || true; exit 1' ERR
 
-	for d in $(DIRS); do
-		( cd $$d && skaffold run --tail -p dev ) &
-	done
+	( cd ../gateway && skaffold run --tail -p dev ) &
+	( cd ../keycloak && skaffold run --tail -p dev ) &
+	( cd ../solver-director && skaffold run --tail -p dev ) &
 
 	echo "▶ All services deployed. Press Ctrl+C to delete..."
 	wait
 
 down stop:
 	set -euo pipefail
-	for d in $(DIRS); do
-		( cd $$d && skaffold delete -p dev) || true
-	done
+	( cd ../gateway && skaffold delete -p dev) || true
+	( cd ../keycloak && skaffold delete -p dev) || true
+	( cd ../solver-director && skaffold delete -p dev) || true
+
