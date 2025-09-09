@@ -1,3 +1,4 @@
+#!/bin/sh
 cd ../gateway
 git pull
 cd ../keycloak
