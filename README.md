@@ -14,4 +14,3 @@ You can access the services through the gateway by executing the `access.sh` scr
 # update
 The update.sh script simply runs git pull on all services
 
-
