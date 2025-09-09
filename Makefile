@@ -1,8 +1,6 @@
 .ONESHELL:
 SHELL := /bin/sh
 
-DIRS := ../solver-director ../gateway ../keycloak
-
 .PHONY: up down start stop
 
 up start:
@@ -19,7 +17,15 @@ up start:
 
 down stop:
 	set -euo pipefail
+
+	# Gateway
 	( cd ../gateway && skaffold delete -p dev) || true
+	(kubectl delete svc gateway-nginx) || true
+	(kubectl delete deployment gateway-nginx) || true
+	(kubectl delete svc gateway-nginx -n nginx-gateway) || true
+	(kubectl delete deployment gateway-nginx -n nginx-gateway) || true
+
+	# Other services
 	( cd ../keycloak && skaffold delete -p dev) || true
 	( cd ../solver-director && skaffold delete -p dev) || true
 
