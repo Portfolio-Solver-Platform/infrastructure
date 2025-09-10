@@ -1,8 +1,8 @@
 # infrastructure
 
 ## First time setup
-If this is your first time running the services locally on minikube you should run bootstrap.sh. But make sure the prerequsites are met:
-- all repositores are in the same folder as the infrastructure is in. e.g. we can access the all by `../<service-name>`
+If this is your first time running the services locally on minikube you should run bootstrap.sh. But make sure the prerequisites are met:
+- all repositories are in the same folder as the infrastructure is in. e.g. we can access them all by `../<service-name>`
 - you have cloned all the services
 
 
