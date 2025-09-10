@@ -10,6 +10,7 @@ up start:
 
 	( cd ../gateway && skaffold run --tail -p dev ) &
 	( cd ../keycloak && skaffold run --tail -p dev ) &
+	( cd ../monitoring && skaffold run --tail -p dev ) &
 	( cd ../solver-director && skaffold run --tail -p dev ) &
 
 	echo "▶ All services deployed. Press Ctrl+C to delete..."
@@ -27,5 +28,6 @@ down stop:
 
 	# Other services
 	( cd ../keycloak && skaffold delete -p dev) || true
+	( cd ../monitoring && skaffold delete -p dev) || true
 	( cd ../solver-director && skaffold delete -p dev) || true
 
