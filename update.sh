@@ -13,4 +13,3 @@ update ../gateway/
 update ../keycloak/
 update ../monitoring/
 update ../solver-director/
-
