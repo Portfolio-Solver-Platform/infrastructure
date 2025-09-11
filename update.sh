@@ -9,6 +9,7 @@ update() {
     git pull
 }
 
+update ../infrastructure/
 update ../gateway/
 update ../keycloak/
 update ../monitoring/

@@ -1,3 +1,4 @@
 #!/bin/sh
-sh ../gateway/bootstrap.sh
+../gateway/bootstrap.sh
+../monitoring/bootstrap.sh
 
