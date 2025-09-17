@@ -14,3 +14,5 @@ update ../gateway/
 update ../keycloak/
 update ../monitoring/
 update ../solver-director/
+update ../solver-artifact-registry/
+update ../minizinc-solvers/
