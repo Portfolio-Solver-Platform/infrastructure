@@ -11,6 +11,7 @@ update() {
 
 update ../infrastructure/
 update ../gateway/
+update ../encryption/
 update ../keycloak/
 update ../monitoring/
 update ../solver-director/

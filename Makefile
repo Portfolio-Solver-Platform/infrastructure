@@ -9,6 +9,7 @@ up start:
 	trap '$(MAKE) down || true; exit 1' ERR
 
 	( cd ../gateway && skaffold run --tail -p dev ) &
+	( cd ../encryption && skaffold run --tail -p dev ) &
 	( cd ../keycloak && skaffold run --tail -p dev ) &
 	( cd ../monitoring && skaffold run --tail -p dev ) &
 	( cd ../solver-director && skaffold run --tail -p dev ) &
@@ -27,6 +28,7 @@ down stop:
 	(kubectl delete deployment gateway-nginx -n nginx-gateway) || true
 
 	# Other services
+	( cd ../encryption && skaffold delete -p dev) || true
 	( cd ../keycloak && skaffold delete -p dev) || true
 	( cd ../monitoring && skaffold delete -p dev) || true
 	( cd ../solver-director && skaffold delete -p dev) || true
