@@ -14,7 +14,7 @@ bootstrap() {
     ./bootstrap.sh
     # Go back to original directory
     cd "$cur" || {
-        echo "Failed to back to infrastructure director: Failed to change directory to $cur, aborting"
+        echo "Failed to go back to infrastructure directory: Failed to change directory to $cur, aborting"
         return 1
     }
 }
