@@ -1,3 +1,3 @@
-#!/bin/sh
-sh ../gateway/minikube/access.sh
+#!/usr/bin/env bash
+../gateway/minikube/access.sh
 

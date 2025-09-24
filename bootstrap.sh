@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Bootstrap infrastructure
 kubectl apply -f ./namespace.yaml
 
