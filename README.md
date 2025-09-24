@@ -8,6 +8,7 @@ If this is your first time running the services locally on minikube you should r
 
 - run `minikube addons enable metrics-server`
 
+- for local development, have [Nix (the package manager)](https://nixos.org/download/) installed
 
 - have [Nix (the package manager)](https://nixos.org/download/) installed and have created the following config `~/.config/nix/nix.conf` and add the following:
 ```conf

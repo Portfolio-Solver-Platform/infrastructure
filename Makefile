@@ -1,5 +1,5 @@
 .ONESHELL:
-SHELL := /bin/bash
+SHELL := bash
 
 .PHONY: up down start stop
 
