@@ -21,9 +21,11 @@
       {
         devShell = pkgs.mkShell {
           packages = with pkgs; [
+            bash
             terraform
             cosign
-            docker
+            skaffold
+            helm
           ];
         };
       }
