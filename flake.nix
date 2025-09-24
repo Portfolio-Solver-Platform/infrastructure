@@ -25,7 +25,7 @@
             terraform
             cosign
             skaffold
-            helm
+            kubernetes-helm
           ];
         };
       }
