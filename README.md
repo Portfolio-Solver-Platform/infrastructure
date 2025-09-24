@@ -8,8 +8,11 @@ If this is your first time running the services locally on minikube you should r
 
 - run `minikube addons enable metrics-server`
 
+- for local development, have [Nix (the package manager)](https://nixos.org/download/) installed
 
 ## How to run
+For local development, install the dependencies using `nix develop`.
+
 By running `make start` all services will be deployed on your local minikube.
 
 You can access the services through the gateway by using minikube tunnel. There after to get the ip address execute the `access.sh` script.
