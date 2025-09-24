@@ -52,7 +52,6 @@ minikube tunnel
 To stop the services write `make stop`
 
 
-
 # update
 The update.sh script simply runs git pull on all services' main branch and current branch
 
