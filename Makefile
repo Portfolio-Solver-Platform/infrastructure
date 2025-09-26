@@ -14,6 +14,7 @@ up start:
 	( cd ../monitoring && skaffold run --tail -p dev ) &
 	( cd ../solver-director && skaffold run --tail -p dev ) &
 	( cd ../solver-artifact-registry && skaffold run --tail -p dev ) &
+	( cd ../user && skaffold run --tail -p dev ) &
 
 	echo "▶ All services deployed. Press Ctrl+C to delete..."
 	wait
@@ -34,3 +35,4 @@ down stop:
 	( cd ../monitoring && skaffold delete -p dev) || true
 	( cd ../solver-director && skaffold delete -p dev) || true
 	( cd ../solver-artifact-registry && skaffold delete -p dev && rm terraform/terraform.tfstate) || true
+	( cd ../user && skaffold delete -p dev) || true

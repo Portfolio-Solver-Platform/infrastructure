@@ -27,4 +27,5 @@ update ../keycloak/
 update ../monitoring/
 update ../solver-director/
 update ../solver-artifact-registry/
+update ../user/
 update ../minizinc-solvers/
