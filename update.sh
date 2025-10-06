@@ -80,7 +80,7 @@ fi
 
 echo
 if [ ${#non_main_repos[@]} -eq 0 ]; then
-  echo "All repos are on the main branch"
+    echo "All repos are on the main branch"
 else
     echo "WARNING: The following repos are not in the main branch:"
     for repo in "${non_main_repos[@]}"; do
