@@ -29,6 +29,9 @@
             git
             kubectl
             kustomize
+            (python3.withPackages (ps: with ps; [
+              requests
+            ]))
           ];
         };
       }
