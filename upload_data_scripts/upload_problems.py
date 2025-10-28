@@ -30,21 +30,29 @@ def get_or_create_minizinc_group():
 
 def upload_problem_with_file(name, mzn_file, group_id):
     """Upload problem with .mzn file"""
+    # Step 1: Create problem
+    response = requests.post(
+        f"{API_BASE}/problems",
+        json={"name": name, "group_ids": [group_id]}
+    )
+    response.raise_for_status()
+    problem_id = response.json()["id"]
+
+    # Step 2: Upload file
     with open(mzn_file, 'rb') as f:
-        response = requests.post(
-            f"{API_BASE}/problems",
-            data={"name": name, "group_id": group_id},
+        response = requests.put(
+            f"{API_BASE}/problems/{problem_id}/file",
             files={"file": (mzn_file.name, f, "text/plain")}
         )
     response.raise_for_status()
-    return response.json()["id"]
+    return problem_id
 
 
 def upload_problem_without_file(name, group_id):
     """Upload self-contained problem (no file)"""
     response = requests.post(
         f"{API_BASE}/problems",
-        data={"name": name, "group_id": group_id}
+        json={"name": name, "group_ids": [group_id]}
     )
     response.raise_for_status()
     return response.json()["id"]
