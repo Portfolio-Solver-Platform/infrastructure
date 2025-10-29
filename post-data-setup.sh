@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-eval $(minikube docker-env)
+# eval $(minikube docker-env)
 
 cd ../solver-artifact-registry && sh apply_terraform.sh 
 (cd ../minizinc-solvers && sh push_to_harbor.sh) &
