@@ -20,7 +20,17 @@
       in
       {
         devShells.default = pkgs.mkShell {
+          shellHook =
+            let
+              minikube = "${pkgs.minikube}/bin/minikube";
+            in
+            ''
+              eval $(${minikube} docker-env)
+            '';
+
           packages = with pkgs; [
+            minikube
+            docker
             bash
             terraform
             cosign
@@ -29,9 +39,11 @@
             git
             kubectl
             kustomize
-            (python3.withPackages (ps: with ps; [
-              requests
-            ]))
+            (python3.withPackages (
+              ps: with ps; [
+                requests
+              ]
+            ))
           ];
         };
       }
