@@ -24,6 +24,12 @@ def main():
         print("=" * 50)
         subprocess.run([sys.executable, scripts_dir / "upload_problems.py"], check=True)
 
+        # Step 3: Upload solvers
+        print("\n" + "=" * 50)
+        print("Step 3: Uploading solvers")
+        print("=" * 50)
+        subprocess.run([sys.executable, scripts_dir / "upload_solvers.py"], check=True)
+
         print("\n" + "=" * 50)
         print("Setup complete!")
         print("=" * 50)
