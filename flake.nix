@@ -30,7 +30,6 @@
 
           packages = with pkgs; [
             minikube
-            kubernetes
             docker
             bash
             terraform
