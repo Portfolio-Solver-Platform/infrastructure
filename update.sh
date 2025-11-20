@@ -62,6 +62,7 @@ update() {
 
 update ../infrastructure/
 update ../gateway/
+update ../cert-manager/
 update ../encryption/
 update ../secrets-manager/
 update ../message-broker/
