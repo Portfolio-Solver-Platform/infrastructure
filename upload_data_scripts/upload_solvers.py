@@ -87,22 +87,26 @@ def save_image_to_tarball(image_name: str) -> Path:
     return tarball_path
 
 
-def upload_solver(name: str, tarball_path: Path):
+def upload_solver(image_name: str, solver_names: list[str], tarball_path: Path):
     """Upload solver tarball to the API
 
     Args:
-        name: Solver name
+        image_name: Docker image name for Harbor
+        solver_names: List of solver names this image supports
         tarball_path: Path to the tarball file
 
     Raises:
         requests.HTTPError: If upload fails
     """
-    print(f"Uploading {name}...", file=sys.stderr)
+    print(f"Uploading {image_name} with solvers {solver_names}...", file=sys.stderr)
 
     with open(tarball_path, 'rb') as f:
         response = requests.post(
             f"{API_BASE}/solvers",
-            data={"name": name},
+            data={
+                "image_name": image_name,
+                "names": ",".join(solver_names)
+            },
             files={"file": (tarball_path.name, f, "application/x-tar")}
         )
 
@@ -110,36 +114,37 @@ def upload_solver(name: str, tarball_path: Path):
     return response.json()
 
 
-def process_solver(solver_name: str):
+def process_solver(image_name: str, solver_names: list[str]):
     """Build, save, and upload a solver
 
     Args:
-        solver_name: Name of the solver to process
+        image_name: Docker image name to build and upload
+        solver_names: List of solver names this image supports
     """
     tarball_path = None
 
     try:
         # Build the image
-        image_name = build_solver_image(solver_name)
+        full_image_name = build_solver_image(image_name)
 
         # Save to tarball
-        tarball_path = save_image_to_tarball(image_name)
+        tarball_path = save_image_to_tarball(full_image_name)
 
         # Upload to API
-        result = upload_solver(solver_name, tarball_path)
-        print(f"OK: {solver_name} (id={result['id']})", file=sys.stderr)
+        result = upload_solver(image_name, solver_names, tarball_path)
+        print(f"OK: {image_name} (id={result['id']}, solvers={solver_names})", file=sys.stderr)
 
     except subprocess.CalledProcessError as e:
-        print(f"ERROR: {solver_name}: Docker command failed: {e.stderr}", file=sys.stderr)
+        print(f"ERROR: {image_name}: Docker command failed: {e.stderr}", file=sys.stderr)
         raise
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 400 and "already exists" in e.response.text.lower():
-            print(f"SKIP: {solver_name} (solver already exists)", file=sys.stderr)
+            print(f"SKIP: {image_name} (solver image already exists)", file=sys.stderr)
         else:
-            print(f"ERROR: {solver_name}: {e.response.text}", file=sys.stderr)
+            print(f"ERROR: {image_name}: {e.response.text}", file=sys.stderr)
             raise
     except Exception as e:
-        print(f"ERROR: {solver_name}: {e}", file=sys.stderr)
+        print(f"ERROR: {image_name}: {e}", file=sys.stderr)
         raise
     finally:
         # Clean up tarball
@@ -153,16 +158,15 @@ def main():
         print(f"FATAL ERROR: Solvers directory not found: {SOLVERS_DIR}", file=sys.stderr)
         sys.exit(1)
 
-    # List of solvers to upload
-    # TODO: Auto-detect solvers or read from config
-    solvers = ["minizinc"]  # Default solver name based on directory structure
+    solver_images = {
+        "minizinc-solver": ["chuffed", "gecode", "ortools", "coin-bc"]
+    }
 
     try:
-        for solver_name in solvers:
+        for image_name, solver_names in solver_images.items():
             try:
-                process_solver(solver_name)
+                process_solver(image_name, solver_names)
             except Exception:
-                # Continue processing other solvers
                 pass
 
         print("Upload complete", file=sys.stderr)
