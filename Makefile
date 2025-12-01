@@ -28,6 +28,7 @@ up start:
 	( cd ../solver-artifact-registry && skaffold run --tail -p dev ) &
 	( cd ../user && skaffold run --tail -p dev ) &
 	( cd ../message-broker && skaffold run --tail -p dev ) &
+	( cd ../pod-scheduler && skaffold run --tail -p dev ) &
 
 	echo "▶ All services deployed. Press Ctrl+C to delete..."
 	wait
@@ -51,4 +52,5 @@ down stop:
 	( cd ../solver-artifact-registry && skaffold delete -p dev && rm terraform/terraform.tfstate*) || true
 	( cd ../user && skaffold delete -p dev) || true
 	( cd ../message-broker && skaffold delete -p dev) || true
+	( cd ../pod-scheduler && skaffold run --tail -p dev ) &
 

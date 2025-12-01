@@ -24,4 +24,5 @@ bootstrap ../encryption/
 bootstrap ../monitoring/
 bootstrap ../solver-artifact-registry/
 bootstrap ../keycloak/
+bootstrap ../pod-scheduler/
 

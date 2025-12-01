@@ -16,18 +16,6 @@ SOLVERS_DIR = Path(__file__).parent.parent.parent / "minizinc-solvers"
 
 
 def build_solver_image(solver_name: str, tag: str = "latest"):
-    """Build Docker image for a solver
-
-    Args:
-        solver_name: Name of the solver (e.g., "gecode", "chuffed")
-        tag: Docker image tag (default: "latest")
-
-    Returns:
-        str: Full image name with tag
-
-    Raises:
-        subprocess.CalledProcessError: If docker build fails
-    """
     image_name = f"{solver_name}:{tag}"
 
     print(f"Building {image_name}...", file=sys.stderr)
@@ -51,17 +39,7 @@ def build_solver_image(solver_name: str, tag: str = "latest"):
 
 
 def save_image_to_tarball(image_name: str) -> Path:
-    """Save Docker image to a tarball
 
-    Args:
-        image_name: Full Docker image name with tag
-
-    Returns:
-        Path: Path to the created tarball
-
-    Raises:
-        subprocess.CalledProcessError: If docker save fails
-    """
     # Create temporary file for tarball
     tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".tar")
     tmp_file.close()
@@ -88,16 +66,7 @@ def save_image_to_tarball(image_name: str) -> Path:
 
 
 def upload_solver(image_name: str, solver_names: list[str], tarball_path: Path):
-    """Upload solver tarball to the API
 
-    Args:
-        image_name: Docker image name for Harbor
-        solver_names: List of solver names this image supports
-        tarball_path: Path to the tarball file
-
-    Raises:
-        requests.HTTPError: If upload fails
-    """
     print(f"Uploading {image_name} with solvers {solver_names}...", file=sys.stderr)
 
     with open(tarball_path, 'rb') as f:
@@ -115,12 +84,6 @@ def upload_solver(image_name: str, solver_names: list[str], tarball_path: Path):
 
 
 def process_solver(image_name: str, solver_names: list[str]):
-    """Build, save, and upload a solver
-
-    Args:
-        image_name: Docker image name to build and upload
-        solver_names: List of solver names this image supports
-    """
     tarball_path = None
 
     try:
@@ -153,13 +116,12 @@ def process_solver(image_name: str, solver_names: list[str]):
 
 
 def main():
-    """Main entry point"""
     if not SOLVERS_DIR.exists():
         print(f"FATAL ERROR: Solvers directory not found: {SOLVERS_DIR}", file=sys.stderr)
         sys.exit(1)
 
     solver_images = {
-        "minizinc-solver": ["chuffed", "gecode", "ortools", "coin-bc"]
+        "minizinc-solver": ["chuffed", "gecode", "ortools", "coinbc"]
     }
 
     try:
