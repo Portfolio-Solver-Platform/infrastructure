@@ -27,4 +27,6 @@ bootstrap ../secrets-manager/
 bootstrap ../message-broker/
 bootstrap ../monitoring/
 bootstrap ../solver-artifact-registry/
+bootstrap ../keycloak/
+bootstrap ../pod-scheduler/
 

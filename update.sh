@@ -72,6 +72,10 @@ update ../solver-director/
 update ../solver-artifact-registry/
 update ../user/
 update ../minizinc-solvers/
+update ../data-gatherer/
+update ../solver-controller/
+update ../cert-manager/
+
 
 if [ ${#not_up_to_date[@]} -ne 0 ]; then
     echo
