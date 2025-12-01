@@ -21,6 +21,10 @@ bootstrap() {
 
 bootstrap ../gateway/
 bootstrap ../encryption/
+bootstrap ../cert-manager/
+bootstrap ../keycloak/
+bootstrap ../secrets-manager/
+bootstrap ../message-broker/
 bootstrap ../monitoring/
 bootstrap ../solver-artifact-registry/
 bootstrap ../keycloak/
