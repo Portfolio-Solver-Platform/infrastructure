@@ -6,7 +6,7 @@ Run with: python scripts/upload_groups.py
 import requests
 import sys
 
-API_BASE = "http://localhost/api/solverdirector/v1"
+API_BASE = "http://local/api/solverdirector/v1"
 
 
 def create_group(name: str, description: str):
