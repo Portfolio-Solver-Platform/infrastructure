@@ -61,6 +61,8 @@ metadata:
   namespace: nginx-gateway
 spec:
   interval: 5m
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: ./charts/routes/
