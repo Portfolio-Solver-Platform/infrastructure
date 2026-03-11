@@ -18,3 +18,21 @@ patches:
             valuesFiles:
               - ./helm/values.yaml
               - ./helm/values-dev.yaml
+  - patch: |-
+      apiVersion: infra.contrib.fluxcd.io/v1alpha2
+      kind: Terraform
+      metadata:
+        name: keycloak-setup
+        namespace: flux-system
+      spec:
+        vars:
+          - name: environment
+            value: "dev"
+          - name: bootstrap_service_client_secret
+            value: "admin"
+          - name: admin_app_secret
+            value: "admin"
+          - name: keycloak_url
+            value: "http://keycloak.local"
+          - name: kubernetes_config_path
+            value: "~/.kube/config"
