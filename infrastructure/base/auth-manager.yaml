@@ -25,7 +25,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: ./charts/nginx-gateway-fabric/
+      chart: ./helm/
       sourceRef:
         kind: GitRepository
         name: auth-manager
