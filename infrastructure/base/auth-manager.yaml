@@ -44,6 +44,11 @@ spec:
   interval: 10m
   path: ./terraform
 
+  dependsOn:
+    - name: auth-manager
+      kind: HelmRelease
+      namespace: keycloak
+
   approvePlan: "auto" # Auto apply without approval
 
   sourceRef:

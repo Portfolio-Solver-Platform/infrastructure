@@ -33,6 +33,4 @@ patches:
           - name: admin_app_secret
             value: "admin"
           - name: keycloak_url
-            value: "http://keycloak.local"
-          - name: kubernetes_config_path
-            value: "~/.kube/config"
+      value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
