@@ -45,4 +45,4 @@ patches:
           - name: harbor_admin_password
             value: "admin"
           - name: harbor_url
-            value: "harbor.harbor.svc.cluster.local"
+            value: "harbor.local"
