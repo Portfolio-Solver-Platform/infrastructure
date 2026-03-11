@@ -30,3 +30,7 @@ spec:
         kind: GitRepository
         name: auth-manager
         namespace: flux-system
+
+      reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
+      valuesFiles:
+        - ./helm/values.yaml
