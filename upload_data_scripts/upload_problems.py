@@ -6,7 +6,7 @@ import sys
 import requests
 from pathlib import Path
 
-API_BASE = "http://localhost/api/solverdirector/v1"
+API_BASE = "http://local/api/solverdirector/v1"
 PROBLEMS_DIR = Path(__file__).parent.parent.parent / "problems"
 
 

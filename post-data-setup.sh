@@ -18,6 +18,7 @@ cd ../solver-artifact-registry && sh apply_terraform.sh
 (cd ../data-gatherer && sh push_to_harbor.sh) &
 
 (cd ../infrastructure/upload_data_scripts && python setup.py) &
+(cd ../secrets-manager && sh post-setup-dev.sh) &
 
 
 wait
