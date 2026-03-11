@@ -9,3 +9,4 @@ resources:
   - ./monitoring.yaml
   - ./artifact-registry.yaml
   - ./secrets-manager.yaml
+  - ./message-broker.yaml
