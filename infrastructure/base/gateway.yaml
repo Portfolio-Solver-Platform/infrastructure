@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway
+  # labels:
+  #   psp.io/encrypt: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-gateway
+  # labels:
+  #   psp.io/encrypt: "true"
