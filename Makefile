@@ -53,8 +53,9 @@ down stop:
 	( cd ../message-broker && skaffold delete -p dev) || true
 	( cd ../monitoring && skaffold delete -p dev) || true
 	( cd ../solver-director && skaffold delete -p dev) || true
-	( cd ../solver-artifact-registry && skaffold delete -p dev && rm terraform/terraform.tfstate*) || true
+	( cd ../solver-artifact-registry && skaffold delete -p dev) || true
+	rm -f ../solver-artifact-registry/terraform/terraform.tfstate*
 	( cd ../user && skaffold delete -p dev) || true
 	( cd ../message-broker && skaffold delete -p dev) || true
-	( cd ../pod-scheduler && skaffold run --tail -p dev ) &
+	( cd ../pod-scheduler && skaffold delete -p dev) || true
 

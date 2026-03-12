@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+eval $(minikube docker-env)
+
 if [ "$1" = "dev" ]; then
   echo "Using default development options, unless overridden by environment variables..."
     (cd ../keycloak && sh apply-terraform.sh dev) &
