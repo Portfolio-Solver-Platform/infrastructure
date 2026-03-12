@@ -19,7 +19,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: artifact-registry
+  name: harbor
   namespace: harbor
 spec:
   interval: 5m
