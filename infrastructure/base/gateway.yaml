@@ -66,6 +66,7 @@ spec:
   chart:
     spec:
       chart: ./charts/routes/
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: gateway
