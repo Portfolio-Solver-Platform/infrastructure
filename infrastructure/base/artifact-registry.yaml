@@ -36,20 +36,20 @@ spec:
       reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
       valuesFiles:
         - ./helm/values.yaml
-# ---
-# apiVersion: infra.contrib.fluxcd.io/v1alpha2
-# kind: Terraform
-# metadata:
-#   name: artifact-registry-setup
-#   namespace: flux-system
-# spec:
-#   interval: 10m
-#   path: ./terraform
-#
-#   approvePlan: "auto" # Auto apply without approval
-#   retryInterval: 20s
-#
-#   sourceRef:
-#     kind: GitRepository
-#     name: artifact-registry
-#     namespace: flux-system
+---
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: artifact-registry-setup
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./terraform
+
+  approvePlan: "auto" # Auto apply without approval
+  retryInterval: 20s
+
+  sourceRef:
+    kind: GitRepository
+    name: artifact-registry
+    namespace: flux-system
