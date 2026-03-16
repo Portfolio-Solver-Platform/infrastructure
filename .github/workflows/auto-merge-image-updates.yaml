@@ -12,7 +12,7 @@ permissions:
 jobs:
   verify-and-merge:
     runs-on: ubuntu-latest
-    if: github.actor_id == vars.INFRASTRUCTURE_BOT_ID
+    if: github.actor_id == "${{ vars.INFRASTRUCTURE_BOT_ID }}"
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
