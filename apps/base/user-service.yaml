@@ -15,3 +15,5 @@ spec:
 
   values:
     image: ghcr.io/portfolio-solver-platform/user:main-dcc17598-20260313125256
+    service:
+      name: user
