@@ -8,7 +8,7 @@ spec:
   interval: 1m
   url: https://github.com/Portfolio-Solver-Platform/infrastructure.git
   ref:
-    branch: wip-flux
+    branch: main
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

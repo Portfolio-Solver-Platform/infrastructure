@@ -7,4 +7,4 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/infrastructure.git
   ref:
-    branch: wip-flux
+    branch: main
