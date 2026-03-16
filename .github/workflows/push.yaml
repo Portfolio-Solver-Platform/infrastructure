@@ -1,0 +1,120 @@
+name: Push Docker image and deploy
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'The name of the Docker image (e.g., user)'
+        required: true
+        type: string
+      file_name:
+        description: 'The manifest file name in the infrastructure repo in the apps/base/ folder (e.g., user.yaml)'
+        required: true
+        type: string
+      infrastructure_bot_id:
+        description: 'App ID for the Infrastructure Bot. Uses a default if not provided'
+        required: false
+        type: string
+      registry:
+        description: 'The container registry to push to'
+        required: false
+        type: string
+        default: 'ghcr.io/portfolio-solver-platform'
+      main_branch_name:
+        description: 'The branch name that receives the latest tag'
+        required: false
+        type: string
+        default: 'main'
+    secrets:
+      infrastructure_bot_private_key:
+        description: 'Private key for the Infrastructure Bot'
+        required: true
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      REGISTRY: ${{ inputs.registry }}
+      IMAGE_NAME: ${{ inputs.image_name }}
+      FILE_NAME: ${{ inputs.file_name }}
+      MAIN_BRANCH_NAME: ${{ inputs.main_branch_name }}
+
+    steps:
+      - name: Generate build ID
+        id: prep
+        run: |
+          branch=${GITHUB_REF_NAME//\//-}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +'%Y%m%d%H%M%S')
+          echo "BUILD_TAG=${branch}-${sha}-${ts}" >> $GITHUB_ENV
+
+      - name: Generate Tags
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_TAG }}"
+          TAGS="$IMAGE"
+
+          if [ "$GITHUB_REF_NAME" == "${{ env.MAIN_BRANCH_NAME }}" ]; then
+            TAGS="$TAGS,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+            echo "Building from main branch. 'latest' tag will be applied."
+          fi
+
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "DOCKER_TAGS=$TAGS" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          pull: true
+          push: true
+          tags: ${{ env.DOCKER_TAGS }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
+
+      - name: Generate app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ inputs.infrastructure_bot_id || vars.INFRASTRUCTURE_BOT_ID }}
+          private-key: ${{ secrets.infrastructure_bot_private_key }}
+          owner: ${{ github.repository_owner }}
+          repositories: infrastructure
+
+      - name: Checkout infrastructure repo
+        uses: actions/checkout@v4
+        with:
+          repository: Portfolio-Solver-Platform/infrastructure
+          token: ${{ steps.app-token.outputs.token }}
+          path: infrastructure
+
+      - name: Update image tag in manifests
+        run: |
+          cd infrastructure/apps/base/
+          yq -i ".spec.values.image = \"$IMAGE\"" ${{ env.FILE_NAME }}
+
+      - name: Commit and push changes
+        run: |
+          cd infrastructure
+          git config user.name "infrastructure-bot[bot]"
+          git config user.email "infrastructure-bot[bot]@users.noreply.github.com"
+
+          git add .
+          git diff-index --quiet HEAD || git commit -m "chore(image-update): update ${{ env.IMAGE_NAME }} image to ${{ env.BUILD_TAG }}"
+          git push
