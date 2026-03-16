@@ -6,3 +6,4 @@ resources:
   - ./flux-source.yaml
   - ./tofu-controller.yaml
   - ./infrastructure.yaml
+  - ./apps.yaml
