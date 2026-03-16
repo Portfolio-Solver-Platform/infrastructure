@@ -1,6 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -8,6 +9,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       flake-utils,
     }:
     flake-utils.lib.eachDefaultSystem (
@@ -16,6 +18,10 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+        };
+
+        pkgsUnstable = import nixpkgs-unstable {
+          inherit system;
         };
       in
       {
@@ -29,16 +35,19 @@
             '';
 
           packages = with pkgs; [
+            pkgsUnstable.fluxcd
             minikube
             docker
             bash
-            terraform
-            cosign
-            skaffold
-            kubernetes-helm
             git
             kubectl
             kustomize
+            kubernetes-helm
+            terraform
+
+            # TODO: Remove the following, only used for development of other services
+            cosign
+            skaffold
             (python3.withPackages (
               ps: with ps; [
                 requests

@@ -1,0 +1,48 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../base/
+
+patches:
+  - patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: auth-manager
+        namespace: keycloak
+      spec:
+        chart:
+          spec:
+            valuesFiles:
+              - ./helm/values.yaml
+              - ./helm/values-dev.yaml
+  - patch: |-
+      apiVersion: infra.contrib.fluxcd.io/v1alpha2
+      kind: Terraform
+      metadata:
+        name: keycloak-setup
+        namespace: flux-system
+      spec:
+        vars:
+          - name: environment
+            value: "dev"
+          - name: bootstrap_service_client_secret
+            value: "admin"
+          - name: admin_app_secret
+            value: "admin"
+          - name: keycloak_url
+            value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
+  - patch: |-
+      apiVersion: infra.contrib.fluxcd.io/v1alpha2
+      kind: Terraform
+      metadata:
+        name: artifact-registry-setup
+        namespace: flux-system
+      spec:
+        vars:
+          - name: harbor_admin_password
+            value: "admin"
+          - name: harbor_url
+            value: "harbor.local"
