@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check auto-merge eligibility
+        id: verify
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -28,28 +29,30 @@ jobs:
           FILE_COUNT=$(wc -l < changed_files.txt | tr -d ' ')
           if [ "$FILE_COUNT" -ne 1 ]; then
             echo "PR modified $FILE_COUNT files. Only exactly 1 file is allowed."
-            exit 1
+            exit 0
           fi
 
           # The file has to be inside of the apps/ directory
           CHANGED_FILE=$(cat changed_files.txt)
           if [[ ! "$CHANGED_FILE" == apps/* ]]; then
             echo "Modified file is outside the 'apps/' directory: $CHANGED_FILE"
-            exit 1
+            exit 0
           fi
 
           # Analyse changes made to the file through git diff
           gh pr diff $PR_NUMBER > pr.diff
+          echo "Diff:"
+          cat pr.diff
 
           # Restrict number of additions and deletions to exactly 1.
           # I.e., only allow one line to change,
           # though technically, this would also match for removing one and adding another.
-          ADDITIONS=$(grep '^\+' pr.diff | grep -v '^\+\+\+' | wc -l | tr -d ' ')
-          DELETIONS=$(grep '^\-' pr.diff | grep -v '^\-\-\-' | wc -l | tr -d ' ')
+          ADDITIONS=$(grep '^+' pr.diff | grep -v '^+++' | wc -l | tr -d ' ')
+          DELETIONS=$(grep '^-' pr.diff | grep -v '^---' | wc -l | tr -d ' ')
           if [ "$ADDITIONS" -ne 1 ] || [ "$DELETIONS" -ne 1 ]; then
             echo "PR must contain exactly 1 addition and 1 deletion."
             echo "Found $ADDITIONS additions and $DELETIONS deletions."
-            exit 1
+            exit 0
           fi
 
           # Extract the line that was added and require it to set an image.
@@ -57,12 +60,14 @@ jobs:
           if [[ ! "$ADDED_LINE" =~ ^\+[[:space:]]*image: ]]; then
             echo "The modified line does not update an 'image:' key."
             echo "The line is: $ADDED_LINE"
-            exit 1
+            exit 0
           fi
 
           echo "✅ Validation passed"
+          echo "merge_safe=true" >> "$GITHUB_OUTPUT"
 
       - name: Approve and Merge PR
+        if: steps.verify.outputs.merge_safe == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
