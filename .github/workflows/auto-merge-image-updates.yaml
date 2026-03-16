@@ -1,0 +1,71 @@
+name: Auto-merge CI Image Updates
+
+on:
+  pull_request:
+    types: [opened]
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  verify-and-merge:
+    runs-on: ubuntu-latest
+    if: github.actor_id == "${{ env.INFRASTRUCTURE_BOT_ID }}" 
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+
+      - name: Check auto-merge eligibility
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+
+          # Only one file is allowed to be changed
+          gh pr diff $PR_NUMBER --name-only > changed_files.txt
+          FILE_COUNT=$(wc -l < changed_files.txt | tr -d ' ')
+          if [ "$FILE_COUNT" -ne 1 ]; then
+            echo "PR modified $FILE_COUNT files. Only exactly 1 file is allowed."
+            exit 1
+          fi
+
+          # The file has to be inside of the apps/ directory
+          CHANGED_FILE=$(cat changed_files.txt)
+          if [[ ! "$CHANGED_FILE" == apps/* ]]; then
+            echo "Modified file is outside the 'apps/' directory: $CHANGED_FILE"
+            exit 1
+          fi
+
+          # Analyse changes made to the file through git diff
+          gh pr diff $PR_NUMBER > pr.diff
+
+          # Restrict number of additions and deletions to exactly 1.
+          # I.e., only allow one line to change,
+          # though technically, this would also match for removing one and adding another.
+          ADDITIONS=$(grep '^\+' pr.diff | grep -v '^\+\+\+' | wc -l | tr -d ' ')
+          DELETIONS=$(grep '^\-' pr.diff | grep -v '^\-\-\-' | wc -l | tr -d ' ')
+          if [ "$ADDITIONS" -ne 1 ] || [ "$DELETIONS" -ne 1 ]; then
+            echo "PR must contain exactly 1 addition and 1 deletion."
+            echo "Found $ADDITIONS additions and $DELETIONS deletions."
+            exit 1
+          fi
+
+          # Extract the line that was added and require it to set an image.
+          ADDED_LINE=$(grep '^\+' pr.diff | grep -v '^\+\+\+')
+          if [[ ! "$ADDED_LINE" =~ ^\+[[:space:]]*image: ]]; then
+            echo "The modified line does not update an 'image:' key."
+            echo "The line is: $ADDED_LINE"
+            exit 1
+          fi
+
+          echo "✅ Validation passed"
+
+      - name: Approve and Merge PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --admin "$PR_URL"
