@@ -12,7 +12,7 @@ permissions:
 jobs:
   verify-and-merge:
     runs-on: ubuntu-latest
-    if: github.actor_id == "${{ vars.INFRASTRUCTURE_BOT_ID }}" 
+    if: github.actor_id == vars.INFRASTRUCTURE_BOT_ID
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
@@ -47,8 +47,9 @@ jobs:
           # Restrict number of additions and deletions to exactly 1.
           # I.e., only allow one line to change,
           # though technically, this would also match for removing one and adding another.
-          ADDITIONS=$(grep '^+' pr.diff | grep -v '^+++' | wc -l | tr -d ' ')
-          DELETIONS=$(grep '^-' pr.diff | grep -v '^---' | wc -l | tr -d ' ')
+          echo "Checking for number of additions and deletions"
+          ADDITIONS=$(awk '/^\+/ && !/^\+\+\+/ {count++} END {print count+0}' pr.diff)
+          DELETIONS=$(awk '/^\-/ && !/^\-\-\-/ {count++} END {print count+0}' pr.diff)
           if [ "$ADDITIONS" -ne 1 ] || [ "$DELETIONS" -ne 1 ]; then
             echo "PR must contain exactly 1 addition and 1 deletion."
             echo "Found $ADDITIONS additions and $DELETIONS deletions."
@@ -56,7 +57,8 @@ jobs:
           fi
 
           # Extract the line that was added and require it to set an image.
-          ADDED_LINE=$(grep '^\+' pr.diff | grep -v '^\+\+\+')
+          echo "Checking the added line has the correct format"
+          ADDED_LINE=$(awk '/^\+/ && !/^\+\+\+/ {print}' pr.diff)
           if [[ ! "$ADDED_LINE" =~ ^\+[[:space:]]*image: ]]; then
             echo "The modified line does not update an 'image:' key."
             echo "The line is: $ADDED_LINE"
