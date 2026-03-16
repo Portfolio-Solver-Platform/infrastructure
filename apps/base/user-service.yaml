@@ -12,8 +12,7 @@ spec:
         kind: GitRepository
         name: flux-system
         namespace: flux-system
-
   values:
-    image: ghcr.io/portfolio-solver-platform/user:main-dcc17598-20260313125256
+    image: ghcr.io/portfolio-solver-platform/user:main-bcec3903-20260316103230
     service:
       name: user
