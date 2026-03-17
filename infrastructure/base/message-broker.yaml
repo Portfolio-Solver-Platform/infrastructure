@@ -25,7 +25,7 @@ metadata:
 spec:
   interval: 5m
   driftDetection:
-    mode: enabled
+    mode: warn
   chart:
     spec:
       chart: ./helm/
