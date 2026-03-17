@@ -4,5 +4,6 @@ kind: Kustomization
 
 resources:
   - ./controllers.yaml
+  - ./flux.yaml
   - ./infrastructure.yaml
   - ./apps.yaml
