@@ -34,15 +34,3 @@ patches:
             value: "admin"
           - name: keycloak_url
             value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
-  - patch: |-
-      apiVersion: infra.contrib.fluxcd.io/v1alpha2
-      kind: Terraform
-      metadata:
-        name: artifact-registry-setup
-        namespace: flux-system
-      spec:
-        vars:
-          - name: harbor_admin_password
-            value: "admin"
-          - name: harbor_url
-            value: "harbor.local"
