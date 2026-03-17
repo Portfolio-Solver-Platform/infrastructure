@@ -56,12 +56,66 @@ jobs:
             exit 0
           fi
 
-          # Extract the line that was added and require it to set an image.
-          echo "Checking the added line has the correct format"
+          # Extract both the added and deleted lines, and make sure they only update the image tag
+          echo "Checking that only the image tag is changed"
           ADDED_LINE=$(awk '/^\+/ && !/^\+\+\+/ {print}' pr.diff)
-          if [[ ! "$ADDED_LINE" =~ ^\+[[:space:]]*image: ]]; then
-            echo "The modified line does not update an 'image:' key."
+          DELETED_LINE=$(awk '/^\-/ && !/^\-\-\-/ {print}' pr.diff)
+
+          # Define the regex patterns for the added and deleted lines.
+          COMMON_REGEX='[[:space:]]*image:[[:space:]]*([a-zA-Z0-9-_/]*):([a-zA-Z0-9-_]+)[[:space:]]*$'
+          REGEX_ADDED='^\+'"${COMMON_REGEX}"
+          REGEX_DELETED='^\-'"${COMMON_REGEX}"
+
+          # Validate added line and extract path/tag
+          if [[ "$ADDED_LINE" =~ $REGEX_ADDED ]]; then
+            ADDED_PATH="${BASH_REMATCH[1]}"
+            ADDED_TAG="${BASH_REMATCH[2]}"
+          else
+            echo "The modified line does not match the 'image: <path>:<tag>' format."
             echo "The line is: $ADDED_LINE"
+            exit 0
+          fi
+
+          # Validate deleted line and extract path/tag
+          if [[ "$DELETED_LINE" =~ $REGEX_DELETED ]]; then
+            DELETED_PATH="${BASH_REMATCH[1]}"
+            DELETED_TAG="${BASH_REMATCH[2]}"
+          else
+            echo "The deleted line does not match the 'image: <path>:<tag>' format."
+            echo "The line is: $DELETED_LINE"
+            exit 0
+          fi
+
+          # Make sure the image path of the added line and the deleted line is the same.
+          # I.e., don't auto-merge a complete image change.
+          if [ "$ADDED_PATH" != "$DELETED_PATH" ]; then
+            echo "The image path was modified. Only tag updates are allowed."
+            echo "Old path: $DELETED_PATH"
+            echo "New path: $ADDED_PATH"
+            exit 0
+          fi
+
+          # Check the registry is the one expected
+          EXPECTED_REGISTRY="ghcr.io/portfolio-solver-platform/"
+          if [[ "$ADDED_PATH" != "$EXPECTED_REGISTRY"* ]]; then
+            echo "The image path does not match the expected registry."
+            echo "Expected prefix: $EXPECTED_REGISTRY"
+            echo "Actual path: $ADDED_PATH"
+            exit 0
+          fi
+
+          # Check that the image is the expected format
+          # The '#' tells Bash to remove the $EXPECTED_REGISTRY prefix from the string
+          IMAGE_NAME="${ADDED_PATH#$EXPECTED_REGISTRY}"
+          if [[ ! "$IMAGE_NAME" =~ ^[a-zA-Z-]+$ ]]; then
+            echo "The image name '$IMAGE_NAME' contains invalid characters."
+            echo "Only letters (a-z, A-Z) and hyphens (-) are allowed."
+            exit 0
+          fi
+
+          # Make sure the tag changed
+          if [ "$ADDED_TAG" == "$DELETED_TAG" ]; then
+            echo "The image tag is identical to the previous one."
             exit 0
           fi
 
