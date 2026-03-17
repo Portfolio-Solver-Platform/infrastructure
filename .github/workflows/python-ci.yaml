@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  CI_IMAGE: ${{ input.image_name }}:${{ input.image_tag || github.sha }}
+  CI_IMAGE: ${{ inputs.image_name }}:${{ inputs.image_tag || github.sha }}
 
 jobs:
   ci:
