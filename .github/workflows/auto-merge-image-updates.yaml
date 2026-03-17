@@ -62,7 +62,7 @@ jobs:
           DELETED_LINE=$(awk '/^\-/ && !/^\-\-\-/ {print}' pr.diff)
 
           # Define the regex patterns for the added and deleted lines.
-          COMMON_REGEX='[[:space:]]*image:[[:space:]]*([a-zA-Z0-9-_/]*):([a-zA-Z0-9-_]+)[[:space:]]*$'
+          COMMON_REGEX='[[:space:]]*image:[[:space:]]*([a-zA-Z0-9_./-]+):([a-zA-Z0-9_-]+)[[:space:]]*$'
           REGEX_ADDED='^\+'"${COMMON_REGEX}"
           REGEX_DELETED='^\-'"${COMMON_REGEX}"
 
