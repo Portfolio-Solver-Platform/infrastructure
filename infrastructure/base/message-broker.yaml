@@ -26,6 +26,12 @@ spec:
   interval: 5m
   driftDetection:
     mode: enabled
+    ignore:
+      # Ignore the RabbitmqCluster because it is managed by the RabbitMQ operator
+      - target:
+          group: rabbitmq.com
+          kind: RabbitmqCluster
+          name: rabbitmq
   chart:
     spec:
       chart: ./helm/
