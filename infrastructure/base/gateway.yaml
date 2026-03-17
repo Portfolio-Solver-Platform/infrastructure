@@ -3,15 +3,15 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: gateway
-  # labels:
-  #   psp.io/encrypt: "true"
+  labels:
+    psp.io/encrypt: "true"
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: nginx-gateway
-  # labels:
-  #   psp.io/encrypt: "true"
+  labels:
+    psp.io/encrypt: "true"
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
