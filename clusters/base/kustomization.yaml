@@ -4,6 +4,6 @@ kind: Kustomization
 
 resources:
   - ./flux-source.yaml
-  - ./tofu-controller.yaml
+  - ./controllers.yaml
   - ./infrastructure.yaml
   - ./apps.yaml
