@@ -7,7 +7,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: ./charts/app/
+      chart: ./charts/solver-director/
       sourceRef:
         kind: GitRepository
         name: flux-system
