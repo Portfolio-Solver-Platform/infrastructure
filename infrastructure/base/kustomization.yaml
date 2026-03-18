@@ -11,3 +11,4 @@ resources:
   - ./message-broker.yaml
   - ./pod-scheduler.yaml
   - ./cert-manager.yaml
+  - ./encryption.yaml
