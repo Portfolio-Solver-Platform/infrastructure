@@ -5,6 +5,7 @@ metadata:
   namespace: psp
 spec:
   interval: 5m
+  targetNamespace: psp
   chart:
     spec:
       chart: ./charts/solver-director/
