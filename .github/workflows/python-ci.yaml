@@ -11,6 +11,11 @@ on:
         description: 'The image tag'
         required: false
         type: string
+      code_audit_targets:
+        description: 'Folders or files to scan with Bandit (space-separated)'
+        required: false
+        type: string
+        default: "."
 
 permissions:
   contents: read
@@ -46,7 +51,7 @@ jobs:
         run: docker run --rm $CI_IMAGE pytest -q -p no:cacheprovider
 
       - name: Audit code
-        run: docker run --rm $CI_IMAGE bandit . -qrx ./tests
+        run: docker run --rm $CI_IMAGE bandit ${{ inputs.code_audit_targets }} -qrx ./tests
 
       - name: Dependency audit
         run: docker run --rm $CI_IMAGE pip-audit  --ignore-vuln GHSA-48p4-8xcf-vxj5 --ignore-vuln GHSA-pq67-6m6q-mj2v
