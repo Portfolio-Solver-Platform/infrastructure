@@ -4,6 +4,7 @@ metadata:
   name: solver-director
   namespace: psp
 spec:
+  releaseName: solver-director
   interval: 5m
   targetNamespace: psp
   chart:
@@ -14,7 +15,6 @@ spec:
         name: flux-system
         namespace: flux-system
   values:
-    fullnameOverride: solver-director
     image: ghcr.io/portfolio-solver-platform/solver-director:main-ad3d0221-20260317135537
     service:
       name: solver-director
