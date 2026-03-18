@@ -10,3 +10,4 @@ resources:
   - ./secrets-manager.yaml
   - ./message-broker.yaml
   - ./pod-scheduler.yaml
+  - ./cert-manager.yaml
