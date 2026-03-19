@@ -26,13 +26,7 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          shellHook =
-            let
-              minikube = "${pkgs.minikube}/bin/minikube";
-            in
-            ''
-              eval $(${minikube} docker-env)
-            '';
+          shellHook = "";
 
           packages = with pkgs; [
             pkgsUnstable.fluxcd
