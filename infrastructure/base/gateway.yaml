@@ -22,7 +22,7 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/gateway.git
   ref:
-    branch: wip-add-dep
+    branch: main
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
