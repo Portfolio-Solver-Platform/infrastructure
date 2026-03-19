@@ -44,15 +44,15 @@
             kustomize
             kubernetes-helm
             terraform
-
-            # TODO: Remove the following, only used for development of other services
-            cosign
-            skaffold
             (python3.withPackages (
               ps: with ps; [
                 requests
               ]
             ))
+
+            # The following are only used for development of other services
+            cosign
+            skaffold
           ];
         };
       }
