@@ -1,4 +1,6 @@
-# infrastructure
+# Infrastructure
+
+The deployment configuration for PSP.
 
 ## Prerequisites
 
