@@ -20,7 +20,7 @@ Initialising the cluster:
 - Run `kubectl apply -f init/dev.yaml`
 - For local development, you can access the services through the gateway by using `minikube tunnel`. There after to get the ip address execute the `access.sh` script. Then, insert the following in your `/etc/hosts` file:
 ```
-<IP> local harbor.local keycloak.local grafana.local prometheus.local
+<IP> local keycloak.local grafana.local prometheus.local
 ```
 where `<IP>` is the IP that `minikube/access.sh` gave you.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
