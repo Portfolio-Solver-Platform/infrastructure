@@ -15,6 +15,6 @@ spec:
         name: flux-system
         namespace: flux-system
   values:
-    image: ghcr.io/portfolio-solver-platform/solver-director:main-dc5abc1d-20260320141518
+    image: ghcr.io/portfolio-solver-platform/solver-director:main-0f95bf31-20260320142914
     service:
       name: solver-director
