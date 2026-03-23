@@ -1,7 +1,6 @@
 name: Update infrastructure
 
 on:
-  pull_request: # TODO: Remove
   workflow_call:
     secrets:
       repo_bot_private_key:
