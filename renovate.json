@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Find Docker images in Flux HelmRelease values (apps folder only)",
+      "fileMatch": [
+        "^apps/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "image:\\s+(?<depName>ghcr\\.io/portfolio-solver-platform/[^\\s:]+):(?<currentValue>[^\\s\\n]+)"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
