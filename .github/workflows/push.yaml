@@ -7,10 +7,6 @@ on:
         description: 'The name of the Docker image (e.g., user)'
         required: true
         type: string
-      file_name:
-        description: 'The manifest file name in the infrastructure repo in the apps/base/ folder (e.g., user.yaml)'
-        required: true
-        type: string
       registry:
         description: 'The container registry to push to'
         required: false
@@ -36,7 +32,6 @@ jobs:
     env:
       REGISTRY: ${{ inputs.registry }}
       IMAGE_NAME: ${{ inputs.image_name }}
-      FILE_NAME: ${{ inputs.file_name }}
       MAIN_BRANCH_NAME: ${{ inputs.main_branch_name }}
 
     steps:
