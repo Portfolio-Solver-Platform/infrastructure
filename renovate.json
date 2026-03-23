@@ -4,8 +4,8 @@
     {
       "customType": "regex",
       "description": "Find Docker images in Flux HelmRelease values (apps folder only)",
-      "fileMatch": [
-        "^apps/.*\\.yaml$"
+      "managerFilePatterns": [
+        "/^apps/.*\.yaml$/"
       ],
       "matchStrings": [
         "image:\\s+(?<depName>ghcr\\.io/portfolio-solver-platform/[^\\s:]+):(?<currentValue>[^\\s\\n]+)"
