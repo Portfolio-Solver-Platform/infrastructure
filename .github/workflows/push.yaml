@@ -11,10 +11,6 @@ on:
         description: 'The manifest file name in the infrastructure repo in the apps/base/ folder (e.g., user.yaml)'
         required: true
         type: string
-      infrastructure_bot_id:
-        description: 'App ID for the Infrastructure Bot. Uses a default if not provided'
-        required: false
-        type: string
       registry:
         description: 'The container registry to push to'
         required: false
@@ -26,8 +22,8 @@ on:
         type: string
         default: 'main'
     secrets:
-      infrastructure_bot_private_key:
-        description: 'Private key for the Infrastructure Bot'
+      repo_bot_private_key:
+        description: 'Private key for the repo bot'
         required: true
 
 jobs:
@@ -92,4 +88,4 @@ jobs:
     needs: push 
     uses: Portfolio-Solver-Platform/infrastructure/.github/workflows/update.yaml@main
     secrets:
-      repo_bot_private_key: ${{ secrets.infrastructure_bot_private_key }}
+      repo_bot_private_key: ${{ secrets.repo_bot_private_key }}
