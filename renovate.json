@@ -5,10 +5,10 @@
       "customType": "regex",
       "description": "Find Docker images in Flux HelmRelease values (apps folder only)",
       "managerFilePatterns": [
-        "/^apps/.*\.ya?ml$/"
+        "/^apps/.*\\.ya?ml$/"
       ],
       "matchStrings": [
-        "image:\\s+(?<depName>ghcr\\.io/portfolio-solver-platform/[^\\s:]+):(?<currentValue>[^\\s\\n]+)"
+        "image:\\s+[\"']?(?<depName>ghcr\\.io/portfolio-solver-platform/[^\\s:]+):(?<currentValue>[^\\s\"']+)"
       ],
       "datasourceTemplate": "docker"
     }
