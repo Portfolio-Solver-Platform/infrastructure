@@ -1,0 +1,17 @@
+name: Update infrastructure
+
+on:
+  workflow_call:
+    secrets:
+      repo_bot_private_key:
+        description: 'Private key for the repo bot'
+        required: true
+  workflow_dispatch:
+
+jobs:
+  dispatch-infra-deps:
+    uses: Portfolio-Solver-Platform/deps-bot/.github/workflows/trigger-deps-bot.yml@main
+    with:
+      repository: ${{ github.repository_owner }}/infrastructure
+    secrets:
+      repo_bot_private_key: ${{ secrets.repo_bot_private_key || secrets.REPO_BOT_PRIVATE_KEY }}
