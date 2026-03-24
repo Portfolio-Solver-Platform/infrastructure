@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate configuration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Install environment
+        run: nix develop .#ci
+
+      - name: Lint YAML
+        run: nix develop .#ci --command yamllint .
+
+      - name: Validate
+        run: nix develop .#ci --command ./tests/validate-flux.sh
+
+  required:
+    name: Required checks
+    runs-on: ubuntu-latest
+    needs: [validate]
+    steps:
+      - name: Mark as successful
+        run: echo "All required jobs have passed!"
