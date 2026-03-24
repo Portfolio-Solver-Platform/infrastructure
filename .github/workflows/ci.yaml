@@ -1,8 +1,10 @@
 name: Validate
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -11,14 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix Magic Cache
+
+      - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Run Validation Script
-        run: nix develop --command ./tests/validate-flux.sh
+      - name: Install environment
+        run: nix develop .#ci
+
+      - name: Validate
+        run: nix develop .#ci --command ./tests/validate-flux.sh
