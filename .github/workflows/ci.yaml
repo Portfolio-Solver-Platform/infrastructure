@@ -19,9 +19,6 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Install environment
         run: nix develop .#ci
 
