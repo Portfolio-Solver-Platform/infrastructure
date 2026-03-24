@@ -13,6 +13,6 @@ spec:
         name: flux-system
         namespace: flux-system
   values:
-    image: ghcr.io/portfolio-solver-platform/user:main-b7c3440f-20260323104034
+    image: ghcr.io/portfolio-solver-platform/user:main-b9f68c33-20260323185446
     service:
       name: user
