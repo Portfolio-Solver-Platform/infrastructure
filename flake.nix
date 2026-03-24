@@ -30,6 +30,7 @@
             ciPackages = with pkgs; [
               pkgsUnstable.fluxcd
               kubeconform
+              yamllint
               bash
             ];
           in
