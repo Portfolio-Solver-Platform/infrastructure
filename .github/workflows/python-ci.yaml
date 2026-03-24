@@ -64,7 +64,7 @@ jobs:
           restore-keys: ${{ runner.os }}-trivy-
 
       - name: Trivy scan (image)
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: ${{ env.CI_IMAGE }}
           format: table
