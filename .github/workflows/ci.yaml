@@ -11,6 +11,7 @@ jobs:
   validate:
     name: Validate configuration
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -32,6 +33,7 @@ jobs:
     name: Required checks
     runs-on: ubuntu-latest
     needs: [validate]
+    timeout-minutes: 2
     steps:
       - name: Mark as successful
         run: echo "All required jobs have passed!"
