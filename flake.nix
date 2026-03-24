@@ -34,6 +34,7 @@
             git
             kubectl
             kustomize
+            kubeconform
             kubernetes-helm
             terraform
             (python3.withPackages (
