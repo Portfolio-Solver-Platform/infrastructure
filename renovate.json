@@ -16,11 +16,13 @@
   "packageRules": [
     {
       "description": "Auto-merge internal apps within the apps/ directory",
-      "matchPackagePrefixes": ["ghcr.io/portfolio-solver-platform/"],
       "matchFileNames": ["apps/**"],
       "automerge": true,
       "platformAutomerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "matchPackageNames": [
+        "ghcr.io/portfolio-solver-platform/{/,}**"
+      ]
     }
   ]
 }
