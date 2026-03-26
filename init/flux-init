@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: ./flux-init <dev|prod> [branch:-main]"
+    exit 1
+fi
+
+ENVIRONMENT="$1"
+if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" ]]; then
+    echo "Error: The first argument must be strictly 'dev' or 'prod'."
+    exit 1
+fi
+
+export TARGET_PATH="./clusters/${ENVIRONMENT}"
+export TARGET_BRANCH="${2:-main}"
+
+if [ ! -f "flux.yaml" ]; then
+    echo "Error: flux.yaml not found in the current directory."
+    exit 1
+fi
+
+echo "Injecting values into flux.yaml..."
+yq -i '
+  (select(.kind == "GitRepository") | .spec.ref.branch) = env(TARGET_BRANCH) |
+  (select(.kind == "Kustomization") | .spec.path) = env(TARGET_PATH)
+' flux.yaml
+
+echo "Success! Flux configuration has been applied for the '${ENVIRONMENT}' environment."
+

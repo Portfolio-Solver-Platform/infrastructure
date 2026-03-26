@@ -50,6 +50,7 @@
                   kustomize
                   kubernetes-helm
                   terraform
+                  yq-go
                   (python3.withPackages (
                     ps: with ps; [
                       requests
