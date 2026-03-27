@@ -19,11 +19,7 @@ Initialising the cluster:
 - Run `flux install`
 - Run `cd init`
 - Run `./flux-init dev [branch]` where `<branch>` is the branch of the infrastructure repo you want to apply (defaults to main).
-- You can access the services through the gateway by using `minikube tunnel`. There after to get the ip address execute the `access.sh` script. Then, insert the following in your `/etc/hosts` file:
-```
-<IP> local keycloak.local grafana.local prometheus.local
-```
-where `<IP>` is the IP that `minikube/access.sh` gave you.
+- You can access the services through the gateway by using `minikube tunnel`. There after to get the IP address execute the `access.sh` script. Remember to follow the instructions the script gives you.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
 - Run the `post-data-setup.sh` script to initialise the data
 
