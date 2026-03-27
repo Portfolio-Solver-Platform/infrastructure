@@ -8,7 +8,7 @@ spec:
   interval: 1m
   url: https://github.com/Portfolio-Solver-Platform/infrastructure.git
   ref:
-    branch: main
+    branch: <insert-from-script>
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -17,7 +17,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: ./clusters/dev
+  path: <insert-from-script>
   prune: true
   sourceRef:
     kind: GitRepository

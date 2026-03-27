@@ -21,11 +21,11 @@ if [ ! -f "flux.yaml" ]; then
     exit 1
 fi
 
-echo "Injecting values into flux.yaml..."
-yq -i '
+echo "Applying flux.yaml to the cluster..."
+yq '
   (select(.kind == "GitRepository") | .spec.ref.branch) = env(TARGET_BRANCH) |
   (select(.kind == "Kustomization") | .spec.path) = env(TARGET_PATH)
-' flux.yaml
+' flux.yaml | kubectl apply -f -
 
-echo "Success! Flux configuration has been applied for the '${ENVIRONMENT}' environment."
+echo "Success! Flux configuration has been applied for the '${ENVIRONMENT}' environment using the '${TARGET_BRANCH}' branch."
 
