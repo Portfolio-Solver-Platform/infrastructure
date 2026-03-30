@@ -25,28 +25,44 @@
         };
       in
       {
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            pkgsUnstable.fluxcd
-            minikube
-            docker
-            bash
-            git
-            kubectl
-            kustomize
-            kubernetes-helm
-            terraform
-            (python3.withPackages (
-              ps: with ps; [
-                requests
-              ]
-            ))
+        devShells =
+          let
+            ciPackages = with pkgs; [
+              pkgsUnstable.fluxcd
+              kubeconform
+              yamllint
+              bash
+            ];
+          in
+          {
+            ci = pkgs.mkShell {
+              packages = ciPackages;
+            };
 
-            # The following are only used for development of other services
-            cosign
-            skaffold
-          ];
-        };
+            default = pkgs.mkShell {
+              packages =
+                ciPackages
+                ++ (with pkgs; [
+                  minikube
+                  docker
+                  git
+                  kubectl
+                  kustomize
+                  kubernetes-helm
+                  terraform
+                  yq-go
+                  (python3.withPackages (
+                    ps: with ps; [
+                      requests
+                    ]
+                  ))
+
+                  # The following are only used for development of other services
+                  cosign
+                  skaffold
+                ]);
+            };
+          };
       }
     );
 }

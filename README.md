@@ -12,17 +12,26 @@ experimental-features = nix-command flakes
 ```
 - Enter the Nix environment using `nix develop`
 
-## Setup
+## Development Setup
 
 Initialising the cluster:
-- For local development, run `minikube addons enable metrics-server`
+- Run `minikube addons enable metrics-server`
 - Run `flux install`
-- Run `kubectl apply -f init/dev.yaml`
-- For local development, you can access the services through the gateway by using `minikube tunnel`. There after to get the ip address execute the `access.sh` script. Then, insert the following in your `/etc/hosts` file:
-```
-<IP> local keycloak.local grafana.local prometheus.local
-```
-where `<IP>` is the IP that `minikube/access.sh` gave you.
+- Run `cd init`
+- Run `./flux-init dev [branch]` where `[branch]` is the branch of the infrastructure repo you want to apply (defaults to main).
+- You can access the services through the gateway by using `minikube tunnel`. There after to get the IP address execute the `access.sh` script. Remember to follow the instructions the script gives you.
+- Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
+- Run the `post-data-setup.sh` script to initialise the data
+
+## Production Setup
+
+First, you need the [transit secrets manager](https://github.com/Portfolio-Solver-Platform/secrets-manager-transit) up and running.
+
+Initialising the cluster:
+- Run `flux install`
+- Run `cd init`
+- Run `./flux-init prod [branch]` where `[branch]` is the branch of this repo you want to apply (defaults to main).
+- When the [secrets manager](https://github.com/Portfolio-Solver-Platform/secrets-manager) is up, follow the secrets manager production init guide.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
 - Run the `post-data-setup.sh` script to initialise the data
 
