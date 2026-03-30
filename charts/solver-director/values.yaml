@@ -1,4 +1,6 @@
 # image: "" # skaffold handles this name, since each profile needs different image names
+solverControllerImage: ghcr.io/portfolio-solver-platform/solver-controller:latest
+dataGathererImage: ghcr.io/portfolio-solver-platform/data-gatherer:latest
 
 imagePullPolicy: IfNotPresent
 
@@ -106,4 +108,10 @@ postgres:
   persistence:
     claimName: "postgres-data"
     size: "1Gi"
-    storageClass: "postgres-retain"
+    storageClass: ""
+
+rabbitmq:
+  host: rabbitmq.rabbit-mq.svc.cluster.local
+  port: 5672
+  user: guest
+  password: guest
