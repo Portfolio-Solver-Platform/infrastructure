@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../base/
+  - ./secrets-manager-token.yaml
 
 patches:
   - patch: |-
