@@ -32,8 +32,6 @@ patches:
             value: "admin"
           - name: admin_app_secret
             value: "admin"
-          - name: keycloak_url
-            value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
@@ -46,3 +44,13 @@ patches:
             valuesFiles:
               - ./helm/values.yaml
               - ./helm/values-dev.yaml
+  - patch: |-
+      apiVersion: infra.contrib.fluxcd.io/v1alpha2
+      kind: Terraform
+      metadata:
+        name: secrets-manager-setup
+        namespace: flux-system
+      spec:
+        vars:
+          - name: token
+            value: "root"

@@ -53,3 +53,7 @@ spec:
     kind: GitRepository
     name: auth-manager
     namespace: flux-system
+
+  vars:
+    - name: keycloak_url
+      value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
