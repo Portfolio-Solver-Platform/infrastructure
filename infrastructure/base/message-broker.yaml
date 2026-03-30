@@ -16,7 +16,6 @@ spec:
   url: https://github.com/Portfolio-Solver-Platform/message-broker.git
   ref:
     branch: main
-    commit: ca42535cba6eff213aeb55a23a543557fb193216
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
