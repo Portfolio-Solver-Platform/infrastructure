@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../base/
+  - ./secrets-manager-token.yaml
 
 patches:
   - patch: |-
@@ -46,17 +47,3 @@ patches:
             valuesFiles:
               - ./helm/values.yaml
               - ./helm/values-dev.yaml
-  - patch: |-
-      apiVersion: infra.contrib.fluxcd.io/v1alpha2
-      kind: Terraform
-      metadata:
-        name: secrets-manager-setup
-        namespace: flux-system
-      spec:
-        vars:
-          - name: token
-            value: "root"
-          - name: url
-            value: "http://secrets-manager-openbao.secrets-manager.svc.cluster.local:8200"
-          - name: token_name
-            value: "tofu-controller"
