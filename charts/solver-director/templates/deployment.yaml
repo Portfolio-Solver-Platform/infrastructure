@@ -115,6 +115,18 @@ spec:
               value: {{ .Values.postgres.database.password | quote }}
             - name: DATABASE_URL
               value: "postgresql://{{ .Values.postgres.database.user }}:{{ .Values.postgres.database.password }}@{{ .Values.postgres.service.name }}:{{ .Values.postgres.service.port }}/{{ .Values.postgres.database.name }}"
+            - name: RABBITMQ_HOST
+              value: {{ .Values.rabbitmq.host | quote }}
+            - name: RABBITMQ_PORT
+              value: {{ .Values.rabbitmq.port | quote }}
+            - name: RABBITMQ_USER
+              value: {{ .Values.rabbitmq.user | quote }}
+            - name: RABBITMQ_PASSWORD
+              value: {{ .Values.rabbitmq.password | quote }}
+            - name: SOLVER_CONTROLLER_IMAGE
+              value: {{ .Values.solverControllerImage | quote }}
+            - name: DATA_GATHERER_IMAGE
+              value: {{ .Values.dataGathererImage | quote }}
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:
                 secretKeyRef:

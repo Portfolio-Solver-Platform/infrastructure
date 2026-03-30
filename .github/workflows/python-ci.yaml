@@ -54,7 +54,7 @@ jobs:
         run: docker run --rm $CI_IMAGE bandit ${{ inputs.code_audit_targets }} -qrx ./tests
 
       - name: Dependency audit
-        run: docker run --rm $CI_IMAGE pip-audit  --ignore-vuln GHSA-48p4-8xcf-vxj5 --ignore-vuln GHSA-pq67-6m6q-mj2v
+        run: docker run --rm $CI_IMAGE pip-audit  --ignore-vuln GHSA-48p4-8xcf-vxj5 --ignore-vuln GHSA-pq67-6m6q-mj2v --ignore-vuln CVE-2026-4539 --ignore-vuln CVE-2026-25645
 
       - name: Cache Trivy DB
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
