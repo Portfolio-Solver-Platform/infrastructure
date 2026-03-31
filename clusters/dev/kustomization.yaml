@@ -10,6 +10,14 @@ patches:
       apiVersion: kustomize.toolkit.fluxcd.io/v1
       kind: Kustomization
       metadata:
+        name: foundation
+        namespace: flux-system
+      spec:
+        path: ./foundation/dev/
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
         name: infrastructure
         namespace: flux-system
       spec:

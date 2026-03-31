@@ -7,8 +7,5 @@ resources:
   - ./gateway.yaml
   - ./auth-manager.yaml
   - ./monitoring.yaml
-  - ./secrets-manager.yaml
-  - ./secrets-courier.yaml
   - ./message-broker.yaml
   - ./pod-scheduler.yaml
-  - ./encryption.yaml
