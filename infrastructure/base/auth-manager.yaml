@@ -45,6 +45,7 @@ metadata:
 spec:
   interval: 10m
   path: ./terraform
+  serviceAccountName: tofu-runner-auth-manager
 
   approvePlan: "auto" # Auto apply without approval
   retryInterval: 20s
