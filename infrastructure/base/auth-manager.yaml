@@ -53,3 +53,38 @@ spec:
     kind: GitRepository
     name: auth-manager
     namespace: flux-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tofu-runner-auth-manager
+  namespace: flux-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tofu-runner-auth-manager-baseline
+  namespace: flux-system
+subjects:
+  - kind: ServiceAccount
+    name: tofu-runner-auth-manager
+    namespace: flux-system
+roleRef:
+  kind: ClusterRole
+  name: tf-runner-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Make the service account a cluster-admin.
+# This is necessary because it creates secrets and roles in other namespaces.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tofu-runner-auth-manager-cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tofu-runner-auth-manager
+    namespace: flux-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
