@@ -123,7 +123,7 @@ spec:
     name: auth-manager-tofu-kv
     kind: SecretStore
   target:
-    name: auth-manager-service-credentials
+    name: auth-manager-credentials
     creationPolicy: Owner
   data:
     - secretKey: bootstrap_service_client_id
