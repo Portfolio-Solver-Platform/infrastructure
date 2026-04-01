@@ -14,7 +14,7 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/monitoring.git
   ref:
-    branch: main
+    branch: wip-admin-creds
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
