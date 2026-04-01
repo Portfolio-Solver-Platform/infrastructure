@@ -57,7 +57,7 @@ spec:
 
   varsFrom:
     - kind: Secret
-      name: auth-manager-service-credentials
+      name: auth-manager-credentials
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -115,7 +115,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: auth-manager-service-credentials
+  name: auth-manager-credentials
   namespace: flux-system
 spec:
   refreshInterval: "1h"
@@ -134,3 +134,7 @@ spec:
       remoteRef:
         key: "auth-manager/bootstrap-service-credentials"
         property: "clientSecret"
+    - secretKey: admin_app_secret
+      remoteRef:
+        key: "auth-manager/admin-app-credentials"
+        property: "secret"
