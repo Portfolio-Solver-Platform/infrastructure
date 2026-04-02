@@ -12,6 +12,7 @@ The deployment configuration for PSP.
 
 Initialising the cluster:
 - Start minikube: `minikube start --cpu <cores> --memory <mem> --cni=cilium`. The `--cni=cilium` makes minikube use the Cilium CNI which enforces network policies. Without the flag, network policies would not be enforced.
+- Install CNI: Go to the `cni` repo and use `skaffold run -p dev`
 - Enable metrics server: `minikube addons enable metrics-server`
 - Install FluxCD in the cluster: `flux install`
 - Go to the init folder: `cd init`
