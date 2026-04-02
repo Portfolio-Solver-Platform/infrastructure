@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../base/
   - ./secrets-manager-vars.yaml
+  - ./cni.yaml
 
 patches:
   - patch: |-
