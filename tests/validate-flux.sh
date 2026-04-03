@@ -39,6 +39,10 @@ validate_standard_kustomize() {
 
 echo "🔍 Starting Flux validation..."
 
-validate_flux_component apps ./apps/dev ./clusters/base/apps.yaml
+validate_flux_component controllers ./controllers/ ./clusters/base/controllers.yaml
+
+validate_flux_component foundation ./foundation/dev ./clusters/base/foundation.yaml
 validate_flux_component infrastructure ./infrastructure/dev ./clusters/base/infrastructure.yaml
+validate_flux_component apps ./apps/dev ./clusters/base/apps.yaml
+
 validate_standard_kustomize ./clusters/base
