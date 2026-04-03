@@ -11,7 +11,8 @@ The deployment configuration for PSP.
 ## Development Setup
 
 Initialising the cluster:
-- Start minikube: `minikube start --cpu <cores> --memory <mem> --cni=false`. The `--cni=false` makes minikube avoid installing its default CNI.
+- Start minikube: `minikube start --cni=false`. The `--cni=false` makes minikube avoid installing its default CNI.
+    - It is a good idea to also pass the `--cpu <cores>` and `--memory <mem>` to give minikube additional resources.
 - Install CNI: Go to the [`cni` repo](https://github.com/Portfolio-Solver-Platform/cni) and use `skaffold run -p dev`
 - Enable metrics server: `minikube addons enable metrics-server`
 - Install FluxCD in the cluster: `flux install`
