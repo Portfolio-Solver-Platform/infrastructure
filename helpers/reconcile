@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+flux reconcile kustomization flux-system --with-source \
+    && flux reconcile kustomization controllers \
+    && flux reconcile kustomization foundation \
+    && flux reconcile kustomization infrastructure \
+    && flux reconcile kustomization apps
