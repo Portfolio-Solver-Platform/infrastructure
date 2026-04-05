@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   name: {{ .Values.name }}
   labels:
-    {{- if eq (dig "encryption" "enable" true .Values) true }}
+    {{- if ne .Values.encryption.enable false }}
     psp.io/encrypt: "true"
     {{- end }}
