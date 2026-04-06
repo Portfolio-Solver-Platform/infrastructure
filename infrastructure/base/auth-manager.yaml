@@ -168,7 +168,7 @@ spec:
           kubernetes.io/metadata.name: flux-system
       podSelector:
         matchLabels:
-          app: tofu-runner-auth-manager
+          app.kubernetes.io/name: tf-runner
     ports:
     - protocol: TCP
       port: 15008
