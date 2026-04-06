@@ -1,9 +1,13 @@
-apiVersion: v1
-kind: Namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: keycloak
-  labels:
-    psp.io/encrypt: "true"
+  name: default-deny
+  namespace: keycloak
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
@@ -138,14 +142,3 @@ spec:
       remoteRef:
         key: "auth-manager/admin-app-credentials"
         property: "secret"
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: default-deny
-  namespace: keycloak
-spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
-    - Egress

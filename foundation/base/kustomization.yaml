@@ -4,5 +4,6 @@ kind: Kustomization
 
 resources:
   - ./encryption.yaml
+  - ./namespaces.yaml
   - ./secrets-manager.yaml
   - ./secrets-courier.yaml
