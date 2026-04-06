@@ -1,2 +1,7 @@
 encryption:
   enable: true
+
+network:
+  policy:
+    defaultDeny:
+      enable: true
