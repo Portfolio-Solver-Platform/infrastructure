@@ -33,6 +33,8 @@ spec:
     remediation:
       retries: -1
   values:
+    podLabels:
+      psp.io/encrypt: "true"
     replicaCount: 3
     concurrency: 24
     resources:
