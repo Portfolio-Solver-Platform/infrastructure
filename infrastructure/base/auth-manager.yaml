@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: namespace-keycloak
+  name: auth-manager-namespace
   namespace: flux-system
 spec:
   interval: 10m
