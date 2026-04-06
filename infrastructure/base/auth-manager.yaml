@@ -138,3 +138,14 @@ spec:
       remoteRef:
         key: "auth-manager/admin-app-credentials"
         property: "secret"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: keycloak
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
