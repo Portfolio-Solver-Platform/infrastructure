@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./app-namespace.yaml
   - ./gateway.yaml
-  - ./auth-manager.yaml
+  - ./auth-manager
   - ./monitoring.yaml
   - ./message-broker.yaml
   - ./pod-scheduler.yaml
