@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./flux.yaml
   - ./controllers.yaml
+  - ./bootstrap.yaml
   - ./foundation.yaml
   - ./infrastructure.yaml
   - ./apps.yaml
