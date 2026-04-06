@@ -181,7 +181,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: keycloak-operator 
+      app.kubernetes.io/name: keycloak-operator
   policyTypes:
   - Egress
   egress:
@@ -220,7 +220,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: keycloak-operator 
+      app.kubernetes.io/name: keycloak-operator
   policyTypes:
   - Ingress
   ingress:
