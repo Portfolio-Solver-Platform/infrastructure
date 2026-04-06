@@ -51,6 +51,11 @@ spec:
   varsFrom:
     - kind: Secret
       name: auth-manager-credentials
+
+  runnerPodTemplate:
+    metadata:
+      labels:
+        psp.io/encrypt: "true"
 ---
 apiVersion: v1
 kind: ServiceAccount
