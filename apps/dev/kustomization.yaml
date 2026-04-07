@@ -16,5 +16,5 @@ patches:
         chart:
           spec:
             valuesFiles:
-              - ./helm/values.yaml
-              - ./helm/values-dev.yaml
+              - ./helm/app/values.yaml
+              - ./helm/app/values-dev.yaml
