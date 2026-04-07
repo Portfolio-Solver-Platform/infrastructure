@@ -30,3 +30,15 @@ patches:
             value: "prod"
           - name: keycloak_url
             value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
+  - patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: rabbit-mq
+        namespace: rabbit-mq
+      spec:
+        chart:
+          spec:
+            valuesFiles:
+              - ./helm/values.yaml
+              - ./helm/values-prod.yaml
