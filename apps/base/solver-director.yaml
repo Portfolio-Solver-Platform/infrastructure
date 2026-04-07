@@ -1,3 +1,31 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: solver-director
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/Portfolio-Solver-Platform/solver-director.git
+  ref:
+    branch: wip-prod
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: solver-director-database
+  namespace: psp
+spec:
+  releaseName: solver-director-database
+  interval: 5m
+  targetNamespace: psp
+  chart:
+    spec:
+      chart: ./helm/database/
+      sourceRef:
+        kind: GitRepository
+        name: solver-director
+        namespace: flux-system
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -5,16 +33,16 @@ metadata:
   namespace: psp
 spec:
   releaseName: solver-director
+  dependsOn:
+    - name: solver-director-database
   interval: 5m
   targetNamespace: psp
   chart:
     spec:
-      chart: ./charts/solver-director/
+      chart: ./helm/app/
       sourceRef:
         kind: GitRepository
-        name: flux-system
+        name: solver-director
         namespace: flux-system
   values:
     image: ghcr.io/portfolio-solver-platform/solver-director:main-2225bc25-20260323185512
-    service:
-      name: solver-director
