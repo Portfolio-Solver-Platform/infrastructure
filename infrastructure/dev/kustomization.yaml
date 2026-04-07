@@ -42,3 +42,15 @@ patches:
             valuesFiles:
               - ./charts/routes/values.yaml
               - ./charts/routes/values-dev.yaml
+  - patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: pod-scheduler
+        namespace: pod-scheduler
+      spec:
+        chart:
+          spec:
+            valuesFiles:
+              - ./helm/values.yaml
+              - ./helm/values-dev.yaml
