@@ -3,13 +3,13 @@
 set -e
 
 if [ "$#" -lt 1 ]; then
-    echo "Usage: update <dev|prod> [branch:-main]"
+    echo "Usage: update <dev|prod|dev-prod> [branch:-main]"
     exit 1
 fi
 
 ENVIRONMENT="$1"
-if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" ]]; then
-    echo "Error: The first argument must be strictly 'dev' or 'prod'."
+if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" && "$ENVIRONMENT" != "dev-prod" ]]; then
+    echo "Error: The first argument must be strictly 'dev', 'prod' or 'dev-prod'."
     exit 1
 fi
 
