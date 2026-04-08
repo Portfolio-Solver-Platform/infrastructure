@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
-watch -n 2 "echo '=== Kustomizations ===' && flux get kustomization -A && echo && echo '=== Helm Releases ===' && flux get helmrelease -A"
+
+watch -n 2 -w '{
+  echo "=== Kustomizations ==="
+  flux get kustomization -A
+  echo
+  echo "=== Helm Releases ==="
+  flux get helmrelease -A
+}'
