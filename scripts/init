@@ -8,3 +8,6 @@ flux install
 echo "Configuring Flux..."
 ./scripts/update "$@"
 
+echo "Reconciling..."
+./scripts/reconcile
+

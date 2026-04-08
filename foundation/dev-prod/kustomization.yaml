@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../prod/
+  - ./secrets-manager-vars.yaml
 
 patches:
   - patch: |-
