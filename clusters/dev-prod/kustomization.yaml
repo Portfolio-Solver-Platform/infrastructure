@@ -10,6 +10,14 @@ patches:
       apiVersion: kustomize.toolkit.fluxcd.io/v1
       kind: Kustomization
       metadata:
+        name: bootstrap
+        namespace: flux-system
+      spec:
+        path: ./bootstrap/dev-prod/
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
         name: foundation
         namespace: flux-system
       spec:
