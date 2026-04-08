@@ -11,5 +11,3 @@ spec:
   interval: 5m
   prune: true
   wait: true
-  dependsOn:
-    - name: controllers

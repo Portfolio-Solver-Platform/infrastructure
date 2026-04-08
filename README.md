@@ -35,6 +35,7 @@ Initialising the cluster:
 - Run `cd init`
 - Run `./flux-init prod [branch]` where `[branch]` is the branch of this repo you want to apply (defaults to main).
 - When the [secrets manager](https://github.com/Portfolio-Solver-Platform/secrets-manager) is up, follow the secrets manager production init guide.
+- For the secrets manager Terraform to run, you must create a secret containing the root token similar to the one created in dev mode. When this has run once, it can be deleted since it from then on can use its service account.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
 - Run the `post-data-setup.sh` script to initialise the data
 

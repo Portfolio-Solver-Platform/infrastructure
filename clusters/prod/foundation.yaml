@@ -12,4 +12,5 @@ spec:
   prune: true
   wait: true
   dependsOn:
+    - name: controllers
     - name: bootstrap
