@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo "=== Kustomizations ==="
+flux get kustomization -A
+echo " " # NOTE: The empty space fixes an edge case with spacing in the watch command
+echo "=== Helm Releases ==="
+flux get helmrelease -A
+echo " "
+echo "=== Git Repositories ==="
+flux get sources git -A
+echo " "
+echo "=== OCI Repositories ==="
+flux get sources oci -A
