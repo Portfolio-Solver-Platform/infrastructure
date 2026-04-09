@@ -3,19 +3,18 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../prod/
-  - ./secrets-manager-vars.yaml
+  - ../base/
 
 patches:
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: secrets-manager
-        namespace: secrets-manager
+        name: user
+        namespace: psp
       spec:
         chart:
           spec:
             valuesFiles:
               - ./helm/values.yaml
-              - ./helm/values-dev.yaml
+              - ./helm/values-prod.yaml

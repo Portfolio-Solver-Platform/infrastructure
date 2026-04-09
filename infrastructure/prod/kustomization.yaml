@@ -7,18 +7,6 @@ resources:
 
 patches:
   - patch: |-
-      apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      metadata:
-        name: auth-manager
-        namespace: keycloak
-      spec:
-        chart:
-          spec:
-            valuesFiles:
-              - ./helm/values.yaml
-              - ./helm/values-dev.yaml
-  - patch: |-
       apiVersion: infra.contrib.fluxcd.io/v1alpha2
       kind: Terraform
       metadata:
@@ -27,21 +15,21 @@ patches:
       spec:
         vars:
           - name: environment
-            value: "dev"
+            value: "prod"
           - name: keycloak_url
             value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: gateway-routes
-        namespace: nginx-gateway
+        name: rabbit-mq
+        namespace: rabbit-mq
       spec:
         chart:
           spec:
             valuesFiles:
-              - ./charts/routes/values.yaml
-              - ./charts/routes/values-dev.yaml
+              - ./helm/values.yaml
+              - ./helm/values-prod.yaml
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
@@ -53,4 +41,4 @@ patches:
           spec:
             valuesFiles:
               - ./helm/values.yaml
-              - ./helm/values-dev.yaml
+              - ./helm/values-prod.yaml

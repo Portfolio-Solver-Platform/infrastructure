@@ -39,10 +39,12 @@ validate_standard_kustomize() {
 
 echo "🔍 Starting Flux validation..."
 
-validate_flux_component controllers ./controllers/ ./clusters/base/controllers.yaml
+validate_flux_component controllers ./controllers/ ./clusters/prod/controllers.yaml
+validate_flux_component bootstrap ./bootstrap/prod ./clusters/prod/bootstrap.yaml
+validate_flux_component foundation ./foundation/prod ./clusters/prod/foundation.yaml
+validate_flux_component infrastructure ./infrastructure/prod ./clusters/prod/infrastructure.yaml
+validate_flux_component apps ./apps/prod ./clusters/prod/apps.yaml
 
-validate_flux_component foundation ./foundation/dev ./clusters/base/foundation.yaml
-validate_flux_component infrastructure ./infrastructure/dev ./clusters/base/infrastructure.yaml
-validate_flux_component apps ./apps/dev ./clusters/base/apps.yaml
-
-validate_standard_kustomize ./clusters/base
+validate_standard_kustomize ./clusters/dev
+validate_standard_kustomize ./clusters/dev-prod
+validate_standard_kustomize ./clusters/prod

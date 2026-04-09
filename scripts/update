@@ -3,29 +3,29 @@
 set -e
 
 if [ "$#" -lt 1 ]; then
-    echo "Usage: ./flux-init <dev|prod> [branch:-main]"
+    echo "Usage: update <dev|prod|dev-prod> [branch:-main]"
     exit 1
 fi
 
 ENVIRONMENT="$1"
-if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" ]]; then
-    echo "Error: The first argument must be strictly 'dev' or 'prod'."
+if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" && "$ENVIRONMENT" != "dev-prod" ]]; then
+    echo "Error: The first argument must be strictly 'dev', 'prod' or 'dev-prod'."
     exit 1
 fi
 
 export TARGET_PATH="./clusters/${ENVIRONMENT}"
 export TARGET_BRANCH="${2:-main}"
 
-if [ ! -f "flux.yaml" ]; then
-    echo "Error: flux.yaml not found in the current directory."
+if [ ! -f "./scripts/helpers/flux.yaml" ]; then
+    echo "Error: flux.yaml not found."
     exit 1
 fi
 
-echo "Applying flux.yaml to the cluster..."
+echo "Applying Flux configuration to the cluster..."
 yq '
   (select(.kind == "GitRepository") | .spec.ref.branch) = env(TARGET_BRANCH) |
   (select(.kind == "Kustomization") | .spec.path) = env(TARGET_PATH)
-' flux.yaml | kubectl apply -f -
+' ./scripts/helpers/flux.yaml | kubectl apply -f -
 
 echo "Success! Flux configuration has been applied for the '${ENVIRONMENT}' environment using the '${TARGET_BRANCH}' branch."
 

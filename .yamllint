@@ -22,5 +22,4 @@ rules:
 ignore: |
   .git/
   .github/
-  charts/
-  clusters/base/flux.yaml
+  clusters/prod/flux.yaml
