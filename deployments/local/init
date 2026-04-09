@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+ENVIRONMENT=$1
+
+if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "dev-prod" ]]; then
+    echo "Error: The first argument must be exactly 'dev' or 'dev-prod'." >&2
+    echo "Usage: $0 <dev|dev-prod> [-b <branch>] [--cpu <cores>] [--memory <mem>]" >&2
+    exit 1
+fi
+
+shift
+
+ROOT_DIR=$(pwd)
+INIT_ARGS=()
+INIT_ARGS+=("$ENVIRONMENT")
+MINIKUBE_ARGS=()
+MINIKUBE_ARGS+=("--cni=false")
+BRANCH=""
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -b|--branch)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                BRANCH="$2"
+                shift 2
+            else
+                echo "Error: Argument for $1 is missing." >&2
+                exit 1
+            fi
+            ;;
+        --cpu)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                MINIKUBE_ARGS+=("--cpus=$2")
+                shift 2
+            else
+                echo "Error: Argument for $1 is missing." >&2
+                exit 1
+            fi
+            ;;
+        --memory)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                MINIKUBE_ARGS+=("--memory=$2")
+                shift 2
+            else
+                echo "Error: Argument for $1 is missing." >&2
+                exit 1
+            fi
+            ;;
+        -h|--help)
+            echo "Usage: $0 <dev|dev-prod> [-b <branch>] [--cpu <cores>] [--memory <mem>]"
+            exit 0
+            ;;
+        *)
+            echo "Unknown parameter passed: $1" >&2
+            echo "Usage: $0 <dev|dev-prod> [-b <branch>] [--cpu <cores>] [--memory <mem>]" >&2
+            exit 1
+            ;;
+    esac
+done
+
+echo "Environment selected: $ENVIRONMENT"
+
+if [[ -n "$BRANCH" ]]; then
+    INIT_ARGS+=("$BRANCH")
+    echo "Target branch: $BRANCH"
+fi
+
+echo "=== Starting minikube ==="
+if [[ ${#MINIKUBE_ARGS[@]} -gt 0 ]]; then
+    echo "With minikube options: ${MINIKUBE_ARGS[*]}"
+fi
+
+minikube start "${MINIKUBE_ARGS[@]}"
+
+echo " "
+echo "=== Starting CNI ==="
+cd ../cni && skaffold run -p dev
+cd "$ROOT_DIR"
+
+echo " "
+echo "=== Initialising cluster ==="
+echo "With options: ${INIT_ARGS[*]}"
+./scripts/init "${INIT_ARGS[@]}"
+

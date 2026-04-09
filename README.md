@@ -10,7 +10,18 @@ The deployment configuration for PSP.
 
 ## Development Setup
 
-Initialising the cluster:
+Prerequisites:
+- Have the CNI repo and the gateway repo installed along side this repo. I.e., have the following folder structure:
+    - `infrastructure/`
+    - `cni/`
+    - `gateway/`
+
+Automated steps:
+- Run `./deployments/local/init <profile> [--cpu <cores>] [--memory <mem>]`
+    - `<profile>` can either be `dev` or `dev-prod`, where `dev-prod` is a profile that runs as much with production settings as is possible locally.
+    - The `--cpu` and `--memory` can be used to limit the resources given to the local cluster. Its a good idea to set these because the defaults are relatively low.
+
+Manual steps:
 - Start minikube: `minikube start --cni=false`. The `--cni=false` makes minikube avoid installing its default CNI.
     - It is a good idea to also pass the `--cpu <cores>` and `--memory <mem>` to give minikube additional resources.
 - Install CNI: Go to the [`cni` repo](https://github.com/Portfolio-Solver-Platform/cni) and use `skaffold run -p dev`
