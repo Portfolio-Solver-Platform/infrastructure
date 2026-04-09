@@ -11,9 +11,10 @@ The deployment configuration for PSP.
 ## Development Setup
 
 Prerequisites:
-- Have the CNI repo installed along side this repo. I.e., have the following folder structure:
+- Have the CNI repo and the gateway repo installed along side this repo. I.e., have the following folder structure:
     - `infrastructure/`
     - `cni/`
+    - `gateway/`
 
 Automated steps:
 - Run `./deployments/local/init <profile> [--cpu <cores>] [--memory <mem>]`
