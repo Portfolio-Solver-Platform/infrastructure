@@ -4,8 +4,8 @@ resource "google_compute_network" "main" {
   depends_on = [google_project_service.compute_api]
 }
 
-resource "google_compute_subnetwork" "us" {
-  name          = "us-subnet"
+resource "google_compute_subnetwork" "secrets_manager_transit" {
+  name          = "secrets-manager-transit-subnet"
   ip_cidr_range = "10.0.1.0/24"
   region        = var.secrets_manager_transit_region
   network       = google_compute_network.main.id
@@ -22,8 +22,8 @@ locals {
   }
 }
 
-resource "google_compute_subnetwork" "eu" {
-  name          = "eu-subnet"
+resource "google_compute_subnetwork" "psp_cluster" {
+  name          = "psp-cluster-subnet"
   ip_cidr_range = "10.0.2.0/24"
   region        = var.region
   network       = google_compute_network.main.id
@@ -48,7 +48,7 @@ resource "google_compute_firewall" "allow_cluster_to_secrets_manager_transit" {
   }
 
   source_ranges = [
-    google_compute_subnetwork.eu.ip_cidr_range,
+    google_compute_subnetwork.psp_cluster.ip_cidr_range,
     local.psp_cluster.network.pods_range
   ]
 
@@ -68,4 +68,54 @@ resource "google_compute_firewall" "allow_iap_ssh_to_secrets_manager_transit" {
   source_ranges = ["35.235.240.0/20"] 
 
   target_tags   = [local.secrets_manager_transit.tag] 
+}
+
+resource "google_compute_router" "secrets_manager_transit" {
+  name    = "secrets-manager-transit-router"
+  network = google_compute_network.main.id
+  region  = var.secrets_manager_transit_region
+}
+
+resource "google_compute_router_nat" "secrets_manager_transit" {
+  name   = "secrets-manager-transit-nat"
+  router = google_compute_router.secrets_manager_transit.name
+  region  = var.secrets_manager_transit_region
+
+  nat_ip_allocate_option = "AUTO_ONLY"
+
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+  subnetwork {
+    name                    = google_compute_subnetwork.secrets_manager_transit.id
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+  }
+}
+
+resource "google_compute_router" "psp_cluster" {
+  name    = "psp-cluster-router"
+  network = google_compute_network.main.id
+  region  = var.region
+}
+
+resource "google_compute_router_nat" "psp_cluster" {
+  name   = "psp-cluster-nat"
+  router = google_compute_router.psp_cluster.name
+  region = var.region
+
+  nat_ip_allocate_option = "AUTO_ONLY"
+
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+  subnetwork {
+    name                    = google_compute_subnetwork.psp_cluster.id
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+  }
 }

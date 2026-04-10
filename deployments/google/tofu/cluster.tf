@@ -9,7 +9,7 @@ resource "google_container_cluster" "psp" {
   initial_node_count       = 1
 
   network    = google_compute_network.main.id
-  subnetwork = google_compute_subnetwork.eu.id
+  subnetwork = google_compute_subnetwork.psp_cluster.id
 
   deletion_protection = var.deletion_protection
 

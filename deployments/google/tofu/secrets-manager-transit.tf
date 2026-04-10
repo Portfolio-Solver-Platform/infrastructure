@@ -21,7 +21,7 @@ resource "google_compute_instance" "secrets_manager_transit" {
 
   network_interface {
     network    = google_compute_network.main.id
-    subnetwork = google_compute_subnetwork.us.id
+    subnetwork = google_compute_subnetwork.secrets_manager_transit.id
     # No public IP
   }
 
