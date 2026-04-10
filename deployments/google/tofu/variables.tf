@@ -33,7 +33,7 @@ variable "secrets_manager_transit_zone" {
   default     = "us-central1-a"
 }
 
-variable "psp_cluster_deletion_protection" {
+variable "deletion_protection" {
   description = "Whether to enable deletion protection on the PSP cluster. If enabled, the cluster cannot be deleted through automated tools. This avoids accidental deletions via a bad CI/CD run. Recommended for production."
   type = bool
   default = true

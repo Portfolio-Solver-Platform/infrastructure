@@ -1,13 +1,14 @@
 resource "google_compute_network" "main" {
   name                    = "main-vpc"
   auto_create_subnetworks = false
+  depends_on = [google_project_service.compute_api]
 }
 
 resource "google_compute_subnetwork" "us" {
   name          = "us-subnet"
   ip_cidr_range = "10.0.1.0/24"
   region        = var.secrets_manager_transit_region
-  network       = google_compute_network.global_vpc.id
+  network       = google_compute_network.main.id
 }
 
 locals {

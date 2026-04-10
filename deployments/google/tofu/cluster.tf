@@ -11,7 +11,14 @@ resource "google_container_cluster" "psp" {
   network    = google_compute_network.main.id
   subnetwork = google_compute_subnetwork.eu.id
 
-  deletion_protection = var.psp_cluster_deletion_protection
+  deletion_protection = var.deletion_protection
+
+  ip_allocation_policy {
+    cluster_secondary_range_name  = local.psp_cluster.network.pods_range_name
+    services_secondary_range_name = local.psp_cluster.network.services_range_name
+  }
+
+  depends_on = [google_project_service.container_api]
 }
 
 resource "google_container_node_pool" "psp_nodes" {
@@ -22,10 +29,5 @@ resource "google_container_node_pool" "psp_nodes" {
 
   node_config {
     machine_type = "e2-standard-2"
-  }
-
-  ip_allocation_policy {
-    cluster_secondary_range_name  = local.psp_cluster.network.pods_range_name
-    services_secondary_range_name = local.psp_cluster.network.services_range_name
   }
 }
