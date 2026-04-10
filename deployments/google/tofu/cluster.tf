@@ -1,6 +1,6 @@
 resource "google_container_cluster" "psp" {
   name     = "psp"
-  location = var.region
+  location = var.zone # NOTE: For real production, should use var.region instead to replicate the cluster in all zones
 
   # We can't create a cluster with no node pool defined, but it is recommended
   # to manage the node pool outside of the cluster configuration since a
@@ -28,6 +28,6 @@ resource "google_container_node_pool" "psp_nodes" {
   node_count = 1
 
   node_config {
-    machine_type = "e2-standard-2"
+    machine_type = "e2-medium"
   }
 }
