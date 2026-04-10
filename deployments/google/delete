@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+# Run tofu destroy, but the cluster will not get deleted if deletion_protection = false
