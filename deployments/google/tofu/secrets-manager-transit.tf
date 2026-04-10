@@ -25,10 +25,39 @@ resource "google_compute_instance" "secrets_manager_transit" {
     # No public IP
   }
 
-  # TODO: When ready for automated setup, write the following startup script
-  # metadata_startup_script = <<-EOF
-  #   #!/bin/bash
-  #   # You can add your OpenBao installation and config generation commands here
-  #   echo "Starting OpenBao setup..."
-  # EOF
+  metadata_startup_script = <<-EOF
+    #!/bin/bash
+    set -euo pipefail
+
+    echo "Setting up logging (outputs to /var/log/startup-script.log for debugging)..."
+    exec > >(tee -a /var/log/startup-script.log) 2>&1
+
+    echo "Installing prerequisites..."
+    apt-get update
+    apt-get install -y git curl ca-certificates gnupg lsb-release
+
+    echo "Installing Docker..."
+    apt-get install -y docker.io docker-compose
+    systemctl enable docker
+    systemctl start docker
+
+    echo "Installing Nix daemon (multi-user installation)..."
+    sh <(curl -L https://nixos.org/nix/install) --daemon --yes
+
+    echo "Enabling Nix flakes..."
+    mkdir -p /etc/nix
+    echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
+    # Source the Nix environment so the 'nix' command is available to the rest of this script
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+    echo "Cloning repository..."
+    REPO_DIR="/opt/secrets-manager-transit"
+    git clone https://github.com/Portfolio-Solver-Platform/secrets-manager-transit.git "$REPO_DIR"
+    cd "$REPO_DIR"
+
+    echo "Running init script via Nix..."
+    nix develop --command bash -c "./scripts/init"
+
+    echo "Startup finished"
+  EOF
 }

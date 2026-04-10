@@ -6,13 +6,13 @@ variable "project_id" {
 variable "region" {
   description = "The region for resources."
   type        = string
-  default     = "europe-west4"
+  default     = "europe-north2"
 }
 
 variable "zone" {
   description = "The zone for resources."
   type        = string
-  default     = "europe-west4-a"
+  default     = "europe-north2-a"
 }
 
 variable "secrets_manager_transit_machine_type" {

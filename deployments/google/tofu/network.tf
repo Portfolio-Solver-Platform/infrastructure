@@ -54,3 +54,18 @@ resource "google_compute_firewall" "allow_cluster_to_secrets_manager_transit" {
 
   target_tags = [local.secrets_manager_transit.tag]
 }
+
+resource "google_compute_firewall" "allow_iap_ssh_to_secrets_manager_transit" {
+  name    = "allow-iap-ssh-to-secrets-manager-transit"
+  network = google_compute_network.main.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  # This is the dedicated IP block Google uses for IAP TCP forwarding
+  source_ranges = ["35.235.240.0/20"] 
+
+  target_tags   = [local.secrets_manager_transit.tag] 
+}
