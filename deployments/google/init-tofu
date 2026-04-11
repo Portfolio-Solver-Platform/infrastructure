@@ -41,5 +41,6 @@ if [[ "$NO_DELETION_PROTECTION" == true ]]; then
   TOFU_ARGS+=("-var" "deletion_protection=false")
 fi
 
-cd tofu
+cd ./deployments/google/tofu/
+tofu init
 tofu apply "${TOFU_ARGS[@]}"

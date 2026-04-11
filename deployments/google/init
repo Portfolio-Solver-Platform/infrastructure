@@ -1,4 +1,46 @@
 #!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_ID=""
+NO_DELETION_PROTECTION=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-deletion-protection)
+      NO_DELETION_PROTECTION=true
+      shift
+      ;;
+    -*)
+      echo "Error: Unknown flag '$1'"
+      echo "Usage: $0 <project_id> [--no-deletion-protection]"
+      exit 1
+      ;;
+    *)
+      if [[ -z "$PROJECT_ID" ]]; then
+        PROJECT_ID="$1"
+      else
+        echo "Error: Unexpected positional argument '$1'"
+        echo "Usage: $0 <project_id> [--no-deletion-protection]"
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$PROJECT_ID" ]]; then
+  echo "Error: 'project_id' is a required positional argument."
+  echo "Usage: $0 <project_id> [--no-deletion-protection]"
+  exit 1
+fi
+
+TOFU_ARGS=("$PROJECT_ID")
+
+if [[ "$NO_DELETION_PROTECTION" == true ]]; then
+  TOFU_ARGS+=("--no-deletion-protection")
+fi
+
 echo "=== Initialising Google Cloud Infrastructure ==="
-./deployments/google/init-tofu
+./deployments/google/init-tofu "${TOFU_ARGS[@]}"
 
