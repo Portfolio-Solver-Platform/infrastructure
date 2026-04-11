@@ -61,6 +61,7 @@
                   cosign
                   skaffold
                   opentofu
+                  openbao # For the transit secrets manager init script
                   (google-cloud-sdk.withExtraComponents (
                     with google-cloud-sdk.components;
                     [

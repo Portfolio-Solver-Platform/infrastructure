@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(pwd)
 PROJECT_ID=""
 NO_DELETION_PROTECTION=false
 
@@ -45,12 +44,6 @@ fi
 echo "=== Initialising Google Cloud Infrastructure ==="
 ./deployments/google/init-tofu "${TOFU_ARGS[@]}"
 
-echo "=== Start tunnel to the transit secrets manager ==="
-gcloud compute start-iap-tunnel secrets-manager-transit 8200 --local-host-port=localhost:8200 &
-
-echo "=== Initialise the transit secrets manager ==="
-export BAO_ADDR=http://127.0.0.1:8200/
-cd ../secrets-manager-transit
-TRANSIT_OUTPUT=$(./scripts/init-manager)
-cd "$ROOT_DIR"
+echo "=== Initialising the transit secrets manager ==="
+./deployments/google/init-transit
 

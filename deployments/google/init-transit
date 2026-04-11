@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+INSTANCE_NAME="secrets-manager-transit"
+LOCAL_PORT=8200
+ZONE="us-central1-a"
+# The BAO_ADDR name is important for the init script for the transit secrets manager
+export BAO_ADDR="http://127.0.0.1:${LOCAL_PORT}"
+HEALTH_ENDPOINT="${BAO_ADDR}/v1/sys/health"
+
+TUNNEL_LOG_PATH="/tmp/iap_tunnel.log"
+
+TUNNEL_PID=""
+
+echo "=== Connecting to the transit secrets manager ==="
+echo "Writing the log for the tunnel to $TUNNEL_LOG_PATH"
+
+while true; do
+  # Wait for tunnel
+  if [[ -z "$TUNNEL_PID" ]] || ! kill -0 "$TUNNEL_PID" 2>/dev/null; then
+    echo "Attempting to start IAP tunnel..."
+
+    gcloud compute start-iap-tunnel "$INSTANCE_NAME" 8200 \
+      --local-host-port=localhost:${LOCAL_PORT} \
+      --zone "$ZONE" \
+      > "$TUNNEL_LOG_PATH" 2>&1 &
+    TUNNEL_PID=$!
+
+    # Give the tunnel a few seconds to either connect or fail
+    sleep 10
+
+    # If the process died, the port/VM isn't ready yet. Restart the loop.
+    if ! kill -0 "$TUNNEL_PID" 2>/dev/null; then
+      echo "Tunnel failed (VM/Port likely not ready). Retrying..."
+      TUNNEL_PID=""
+      sleep 5
+      continue
+    fi
+    echo "IAP tunnel process running (PID: $TUNNEL_PID). Checking Secrets Manager..."
+  fi
+
+  # Check OpenBao health
+  HTTP_STATUS=$(curl -s --max-time 2 -o /dev/null -w "%{http_code}" "$HEALTH_ENDPOINT" || echo "000")
+
+  if [[ "$HTTP_STATUS" == "200" || "$HTTP_STATUS" == "501" || "$HTTP_STATUS" == "503" ]]; then
+    echo "Success: Tunnel is active and Secrets Manager is ready! (HTTP Status: $HTTP_STATUS)"
+    break
+  fi
+
+  echo "Waiting for Secrets Manager to initialize (HTTP Status: $HTTP_STATUS)..."
+  sleep 2
+done
+
+echo "The IAP tunnel is running in the background (PID: $TUNNEL_PID)."
+echo "The tunnel and transit secrets manager is ready."
+
+echo "=== Initialising the transit secrets manager ==="
+
+echo "Initialising..."
+cd ../secrets-manager-transit
+TRANSIT_OUTPUT=$(./scripts/init-manager)
+echo "Done initialising."
+echo "$TRANSIT_OUTPUT"
+
+echo "Killing the tunnel..."
+kill $TUNNEL_PID
