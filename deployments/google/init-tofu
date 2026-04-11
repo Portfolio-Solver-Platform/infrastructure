@@ -4,11 +4,16 @@ set -euo pipefail
 
 PROJECT_ID=""
 NO_DELETION_PROTECTION=false
+DESTROY=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --no-deletion-protection)
       NO_DELETION_PROTECTION=true
+      shift
+      ;;
+    --destroy)
+      DESTROY=true
       shift
       ;;
     -*)
@@ -35,12 +40,22 @@ if [[ -z "$PROJECT_ID" ]]; then
   exit 1
 fi
 
-TOFU_ARGS=("-var" "project_id=$PROJECT_ID")
+TOFU_ARGS=()
+
+TOFU_COMMAND="apply"
+if [[ "$DESTROY" == true ]]; then
+  TOFU_COMMAND="destroy"
+fi
+TOFU_ARGS+=("$TOFU_COMMAND")
+
+TOFU_ARGS+=("-var" "project_id=$PROJECT_ID")
 
 if [[ "$NO_DELETION_PROTECTION" == true ]]; then
   TOFU_ARGS+=("-var" "deletion_protection=false")
 fi
 
+echo "With args: " "${TOFU_ARGS[@]}"
+
 cd ./deployments/google/tofu/
 tofu init
-tofu apply "${TOFU_ARGS[@]}"
+tofu "${TOFU_ARGS[@]}"

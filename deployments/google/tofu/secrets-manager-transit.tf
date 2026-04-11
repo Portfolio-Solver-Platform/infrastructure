@@ -95,8 +95,8 @@ resource "google_compute_instance" "secrets_manager_transit" {
     git clone https://github.com/Portfolio-Solver-Platform/secrets-manager-transit.git "$REPO_DIR"
     cd "$REPO_DIR"
 
-    echo "=== Building and running Docker image... ==="
-    docker-compose up -d --build
+    echo "=== Initialising Docker image... ==="
+    ./scripts/init-docker --no-swap
 
     echo "Creating lock file..."
     touch "$LOCK_FILE"
