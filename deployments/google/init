@@ -44,6 +44,72 @@ fi
 echo "=== Initialising Google Cloud Infrastructure ==="
 ./deployments/google/init-tofu "${TOFU_ARGS[@]}"
 
+echo " "
 echo "=== Initialising the transit secrets manager ==="
-./deployments/google/init-transit
+TRANSIT_OUTPUT=$(./deployments/google/init-transit)
+
+TRANSIT_KEY1=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 1:" | awk '{print $NF}')
+TRANSIT_KEY2=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 2:" | awk '{print $NF}')
+TRANSIT_KEY3=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 3:" | awk '{print $NF}')
+TRANSIT_KEY4=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 4:" | awk '{print $NF}')
+TRANSIT_KEY5=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 5:" | awk '{print $NF}')
+TRANSIT_ROOT_TOKEN=$(echo "$TRANSIT_OUTPUT" | grep "Initial Root Token:" | awk '{print $NF}')
+KUBERNETES_BOOTSTRAP_TOKEN=$(echo "$TRANSIT_OUTPUT" | grep "Kubernetes Bootstrap Token:" | awk '{print $NF}')
+
+echo "Important keys and tokens (will be printed later again):"
+echo "Transit Unseal Key 1: $TRANSIT_KEY1"
+echo "Transit Unseal Key 2: $TRANSIT_KEY2"
+echo "Transit Unseal Key 3: $TRANSIT_KEY3"
+echo "Transit Unseal Key 4: $TRANSIT_KEY4"
+echo "Transit Unseal Key 5: $TRANSIT_KEY5"
+echo "Transit Root Token: $TRANSIT_ROOT_TOKEN"
+echo "Kubernetes Transit Token: $KUBERNETES_BOOTSTRAP_TOKEN"
+
+echo " "
+echo "=== Prepare for the main secrets manager in the cluster ==="
+./deployments/google/init-secrets-manager-prepare "$KUBERNETES_BOOTSTRAP_TOKEN"
+
+echo " "
+echo "=== Initialise FluxCD"
+flux install
+./scripts/update prod
+
+echo " "
+echo "=== Initialise main secrets manager ==="
+SECRETS_OUTPUT=$(./deployments/google/init-secrets-manager)
+
+SECRETS_KEY1=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 1:" | awk '{print $NF}')
+SECRETS_KEY2=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 2:" | awk '{print $NF}')
+SECRETS_KEY3=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 3:" | awk '{print $NF}')
+SECRETS_KEY4=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 4:" | awk '{print $NF}')
+SECRETS_KEY5=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 5:" | awk '{print $NF}')
+SECRETS_ROOT_TOKEN=$(echo "$SECRETS_OUTPUT" | grep "Initial Root Token:" | awk '{print $NF}')
+
+echo ""
+echo "=================================================="
+echo "               IMPORTANT SECRETS"
+echo "=================================================="
+echo "CRITICAL: Store these keys in a secure location."
+echo "They will not be displayed again."
+echo ""
+echo "Transit secrets manager:"
+echo "Unseal Key 1: $TRANSIT_KEY1"
+echo "Unseal Key 2: $TRANSIT_KEY2"
+echo "Unseal Key 3: $TRANSIT_KEY3"
+echo "Unseal Key 4: $TRANSIT_KEY4"
+echo "Unseal Key 5: $TRANSIT_KEY5"
+echo "Root Token: $TRANSIT_ROOT_TOKEN"
+echo ""
+echo "Main secrets manager:"
+echo "Recovery Key 1: $SECRETS_KEY1"
+echo "Recovery Key 2: $SECRETS_KEY2"
+echo "Recovery Key 3: $SECRETS_KEY3"
+echo "Recovery Key 4: $SECRETS_KEY4"
+echo "Recovery Key 5: $SECRETS_KEY5"
+echo "Root Token: $SECRETS_ROOT_TOKEN"
+echo "=================================================="
+
+echo ""
+echo "=== Starting reconciliation of cluster ==="
+./scripts/reconcile
 
