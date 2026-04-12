@@ -14,3 +14,11 @@ patches:
         namespace: flux-system
       spec:
         path: ./bootstrap/google/
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: foundation
+        namespace: flux-system
+      spec:
+        path: ./foundation/google/
