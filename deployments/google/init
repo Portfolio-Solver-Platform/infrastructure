@@ -126,7 +126,7 @@ echo "=== Prepare for the main secrets manager in the cluster ==="
 
 echo " "
 echo "=== Initialise FluxCD ==="
-flux install
+flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
 ./scripts/update google wip-google
 
 echo " "
