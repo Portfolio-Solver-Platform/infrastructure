@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../prod/
+
+patches:
+  - patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: encryption
+        namespace: istio-system
+      spec:
+        chart:
+          spec:
+            valuesFiles:
+              - ./helm/values.yaml
+              - ./helm/values-google.yaml
