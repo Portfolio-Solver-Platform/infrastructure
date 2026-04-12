@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-watch -n 2 -w ./scripts/status
+watch -n 5 -w ./scripts/status

@@ -26,10 +26,12 @@ resource "google_container_node_pool" "psp_nodes" {
   location   = var.zone # NOTE: For real production, should use var.region instead to replicate the cluster in all zones
   cluster    = google_container_cluster.psp.name
 
-  autoscaling {
-    min_node_count = 1
-    max_node_count = 3
-  }
+  node_count = 1
+
+  # autoscaling {
+  #   min_node_count = 1
+  #   max_node_count = 3
+  # }
 
   node_config {
     machine_type = "e2-standard-4"

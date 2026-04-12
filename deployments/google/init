@@ -127,7 +127,7 @@ echo "=== Prepare for the main secrets manager in the cluster ==="
 echo " "
 echo "=== Initialise FluxCD ==="
 flux install
-./scripts/update prod
+./scripts/update google wip-google
 
 echo " "
 echo "=== Initialise main secrets manager ==="
