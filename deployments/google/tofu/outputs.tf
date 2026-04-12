@@ -8,7 +8,7 @@ output "psp_cluster_zone" {
   description = "The zone of the psp cluster"
 }
 
-output "secrets_manager_transit_ip" {
-  description = "The static internal IP address of the transit secrets manager VM"
-  value       = google_compute_address.secrets_manager_transit_internal_ip.address
+output "secrets_manager_transit_host" {
+  description = "The host of the transit secrets manager VM"
+  value       = "secrets-manager-transit.${var.secrets_manager_transit_zone}.c.${var.project_id}.internal"
 }

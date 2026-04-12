@@ -13,10 +13,8 @@ patches:
         name: secrets-manager
         namespace: secrets-manager
       spec:
-        chart:
-          spec:
-            valuesFrom:
-                - kind: Secret
-                  name: secrets-manager-transit-vars
-                  valuesKey: host
-                  targetPath: secretsManagerTransit.host
+        valuesFrom:
+          - kind: Secret
+            name: secrets-manager-transit-vars
+            valuesKey: host
+            targetPath: secretsManagerTransit.host

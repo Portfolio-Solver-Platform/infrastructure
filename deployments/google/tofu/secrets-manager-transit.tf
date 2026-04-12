@@ -5,13 +5,6 @@ locals {
   }
 }
 
-resource "google_compute_address" "secrets_manager_transit_internal_ip" {
-  name         = "secrets-manager-transit-internal-ip"
-  subnetwork   = google_compute_subnetwork.secrets_manager_transit.id
-  address_type = "INTERNAL"
-  region       = var.secrets_manager_transit_region 
-}
-
 resource "google_compute_instance" "secrets_manager_transit" {
   name         = "secrets-manager-transit"
   machine_type = var.secrets_manager_transit_machine_type
@@ -30,7 +23,6 @@ resource "google_compute_instance" "secrets_manager_transit" {
     network    = google_compute_network.main.id
     subnetwork = google_compute_subnetwork.secrets_manager_transit.id
     # No public IP
-    network_ip = google_compute_address.secrets_manager_transit_internal_ip.address
   }
 
   depends_on = [

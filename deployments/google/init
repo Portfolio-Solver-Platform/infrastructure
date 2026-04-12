@@ -81,6 +81,12 @@ echo "=== Initialising Google Cloud Infrastructure ==="
 if [[ "$DESTROY" == true ]]; then
   exit 1
 fi
+echo "Extracting outputs..."
+cd ./deployments/google/tofu/
+CLUSTER_NAME=$(terraform output -raw psp_cluster_name)
+CLUSTER_ZONE=$(terraform output -raw psp_cluster_zone)
+TRANSIT_HOST=$(terraform output -raw secrets_manager_transit_host)
+cd "$ROOT_DIR"
 
 echo " "
 echo "=== Initialising the transit secrets manager ==="
@@ -110,11 +116,6 @@ fi
 
 echo " "
 echo "=== Connecting kubectl to the live cluster ==="
-echo "Getting connection details..."
-cd ./deployments/google/tofu/
-CLUSTER_NAME=$(terraform output -raw psp_cluster_name)
-CLUSTER_ZONE=$(terraform output -raw psp_cluster_zone)
-cd "$ROOT_DIR"
 echo "Cluster name: $CLUSTER_NAME"
 echo "Cluster zone: $CLUSTER_ZONE"
 echo "Connecting..."
@@ -123,6 +124,8 @@ gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$CLUSTER_ZONE"
 echo " "
 echo "=== Prepare for the main secrets manager in the cluster ==="
 ./deployments/google/init-secrets-manager-prepare "$KUBERNETES_TRANSIT_TOKEN"
+echo "Creating transit host secret..."
+./scripts/set-secrets-manager-transit-host "$TRANSIT_HOST"
 
 echo " "
 echo "=== Initialise FluxCD ==="
