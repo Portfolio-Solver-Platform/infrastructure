@@ -13,6 +13,14 @@ TUNNEL_LOG_PATH="/tmp/iap_tunnel.log"
 
 TUNNEL_PID=""
 
+cleanup() {
+  if [[ -n "$TUNNEL_PID" ]]; then
+    echo "Killing the IAP tunnel (PID: $TUNNEL_PID)..."
+    kill "$TUNNEL_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
+
 echo "=== Connecting to the transit secrets manager ==="
 echo "Writing the log for the tunnel to $TUNNEL_LOG_PATH"
 
@@ -49,7 +57,7 @@ while true; do
   fi
 
   echo "Waiting for Secrets Manager to initialize (HTTP Status: $HTTP_STATUS)..."
-  sleep 2
+  sleep 5
 done
 
 echo "The IAP tunnel is running in the background (PID: $TUNNEL_PID)."
@@ -59,9 +67,6 @@ echo "=== Initialising the transit secrets manager ==="
 
 echo "Initialising..."
 cd ../secrets-manager-transit
-TRANSIT_OUTPUT=$(./scripts/init-manager)
+TRANSIT_OUTPUT=$(./scripts/init-manager | tee /dev/stderr)
 echo "Done initialising."
 echo "$TRANSIT_OUTPUT"
-
-echo "Killing the tunnel..."
-kill $TUNNEL_PID

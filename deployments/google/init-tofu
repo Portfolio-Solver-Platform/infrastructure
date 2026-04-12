@@ -5,6 +5,7 @@ set -euo pipefail
 PROJECT_ID=""
 NO_DELETION_PROTECTION=false
 DESTROY=false
+AUTO_APPROVE=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -14,6 +15,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --destroy)
       DESTROY=true
+      shift
+      ;;
+    -y|--auto-approve)
+      AUTO_APPROVE=true
       shift
       ;;
     -*)
@@ -52,6 +57,10 @@ TOFU_ARGS+=("-var" "project_id=$PROJECT_ID")
 
 if [[ "$NO_DELETION_PROTECTION" == true ]]; then
   TOFU_ARGS+=("-var" "deletion_protection=false")
+fi
+
+if [[ "$AUTO_APPROVE" == true ]]; then
+  TOFU_ARGS+=("-auto-approve")
 fi
 
 echo "With args: " "${TOFU_ARGS[@]}"
