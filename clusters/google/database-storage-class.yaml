@@ -4,6 +4,6 @@ metadata:
   name: database
 provisioner: pd.csi.storage.gke.io
 parameters:
-  type: pd-ssd 
+  type: pd-ssd
 reclaimPolicy: Retain
 volumeBindingMode: WaitForFirstConsumer
