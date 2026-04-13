@@ -34,8 +34,8 @@ patches:
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: gateway-routes
-        namespace: nginx-gateway
+        name: gateway
+        namespace: gateway
       spec:
         chart:
           spec:
