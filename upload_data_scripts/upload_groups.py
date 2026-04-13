@@ -5,17 +5,25 @@ Run with: python scripts/upload_groups.py
 """
 import requests
 import sys
+import psp.config as psp_config
+from psp.auth import get_access_token
 
-API_BASE = "http://local/api/solverdirector/v1"
+
+def _api_base() -> str:
+    return psp_config.load()["base_url"].rstrip("/") + "/api/solverdirector/v1"
+
+
+def _headers() -> dict:
+    return {"Authorization": f"Bearer {get_access_token()}"}
 
 
 def create_group(name: str, description: str):
     """Create a group via API"""
-    url = f"{API_BASE}/groups"
+    url = f"{_api_base()}/groups"
     data = {"name": name, "description": description}
 
     try:
-        response = requests.post(url, json=data)
+        response = requests.post(url, json=data, headers=_headers())
         if response.status_code == 201:
             result = response.json()
             print(f"✓ Created group '{name}' with ID: {result['id']}")
