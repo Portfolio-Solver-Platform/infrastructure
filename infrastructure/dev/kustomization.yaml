@@ -31,7 +31,7 @@ patches:
           - name: keycloak_url
             value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
           - name: keycloak_hostname
-            value: "keycloak.local"
+            value: "${DOMAIN_AUTH}"
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
