@@ -61,8 +61,6 @@ metadata:
   name: gateway-routes
   namespace: nginx-gateway
 spec:
-  dependsOn:
-    - name: gateway
   interval: 5m
   driftDetection:
     mode: enabled
