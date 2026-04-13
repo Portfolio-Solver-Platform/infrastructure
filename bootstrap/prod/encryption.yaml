@@ -17,7 +17,7 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/encryption.git
   ref:
-    branch: wip-gateway
+    branch: main
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
