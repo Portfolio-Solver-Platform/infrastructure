@@ -7,4 +7,4 @@ data:
   DOMAIN_ROOT: "local"
   DOMAIN_AUTH: "auth.local"
   DOMAIN_MONITORING: "metrics.local"
-  DOMAIN_SECRETS: "secrets.local"
+  DOMAIN_SECRETS: "secretsman.local"
