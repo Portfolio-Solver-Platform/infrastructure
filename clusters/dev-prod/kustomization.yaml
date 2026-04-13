@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../prod/
+  - ../dev/database-storage-class.yaml
 
 patches:
   - patch: |-
