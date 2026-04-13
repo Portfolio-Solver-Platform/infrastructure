@@ -13,3 +13,7 @@ spec:
   wait: true
   dependsOn:
     - name: foundation
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: global-vars

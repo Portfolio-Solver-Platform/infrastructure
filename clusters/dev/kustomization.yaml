@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../prod/
   - ./database-storage-class.yaml
+  - ./global-vars.yaml
 
 patches:
   - patch: |-

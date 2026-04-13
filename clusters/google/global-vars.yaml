@@ -5,6 +5,6 @@ metadata:
   namespace: flux-system
 data:
   DOMAIN_ROOT: "psp.jonasbork.com"
-  DOMAIN_AUTH_MANAGER: "auth.psp.jonasbork.com"
+  DOMAIN_AUTH: "auth.psp.jonasbork.com"
   DOMAIN_MONITORING: "metrics.psp.jonasbork.com"
   DOMAIN_SECRETS: "secrets.psp.jonasbork.com"

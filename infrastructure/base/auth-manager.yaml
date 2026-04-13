@@ -29,6 +29,9 @@ spec:
       reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
       valuesFiles:
         - ./helm/values.yaml
+  values:
+    keycloak:
+      hostname: ${DOMAIN_AUTH}
 ---
 apiVersion: infra.contrib.fluxcd.io/v1alpha2
 kind: Terraform
