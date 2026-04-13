@@ -2,13 +2,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: gateway
-  labels:
-    psp.io/encrypt: "true"
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: nginx-gateway
   labels:
     psp.io/encrypt: "true"
@@ -24,45 +17,12 @@ spec:
   ref:
     branch: main
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: gateway-api-crds
-  namespace: nginx-gateway
-spec:
-  interval: 10m
-  path: ./crds
-  prune: true
-  wait: true
-  sourceRef:
-    kind: GitRepository
-    name: gateway
-    namespace: flux-system
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: gateway
-  namespace: nginx-gateway
-spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: ./charts/nginx-gateway-fabric/
-      reconcileStrategy: Revision
-      sourceRef:
-        kind: GitRepository
-        name: gateway
-        namespace: flux-system
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: gateway-routes
   namespace: nginx-gateway
 spec:
-  dependsOn:
-    - name: gateway
   interval: 5m
   driftDetection:
     mode: enabled

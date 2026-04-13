@@ -3,6 +3,11 @@ kind: Namespace
 metadata:
   name: istio-system
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway
+---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
@@ -12,7 +17,22 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/encryption.git
   ref:
-    branch: main
+    branch: wip-gateway
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gateway-api-crds
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./crds
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: encryption
+    namespace: flux-system
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
