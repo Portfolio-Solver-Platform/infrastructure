@@ -80,4 +80,4 @@ spec:
     grafana:
       hostname: ${DOMAIN_MONITORING}
     secretsManager:
-      hostname: ${DOMAIN_SECRETS_MANAGER}
+      hostname: ${DOMAIN_SECRETS}
