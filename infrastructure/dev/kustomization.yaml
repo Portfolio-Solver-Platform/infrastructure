@@ -34,14 +34,14 @@ patches:
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: gateway-routes
-        namespace: nginx-gateway
+        name: gateway
+        namespace: gateway
       spec:
         chart:
           spec:
             valuesFiles:
-              - ./charts/routes/values.yaml
-              - ./charts/routes/values-dev.yaml
+              - ./helm/values.yaml
+              - ./helm/values-dev.yaml
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

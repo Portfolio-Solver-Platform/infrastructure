@@ -171,3 +171,7 @@ echo ""
 echo "=== Starting reconciliation of cluster ==="
 ./scripts/reconcile
 
+echo ""
+echo "=== Getting the public IP of the cluster ==="
+./access.sh
+

@@ -2,9 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nginx-gateway
-  labels:
-    psp.io/encrypt: "true"
+  name: gateway
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
@@ -17,18 +15,33 @@ spec:
   ref:
     branch: main
 ---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gateway-api-crds
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./crds
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: gateway
+    namespace: flux-system
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: gateway-routes
-  namespace: nginx-gateway
+  name: gateway
+  namespace: gateway
 spec:
   interval: 5m
   driftDetection:
     mode: enabled
   chart:
     spec:
-      chart: ./charts/routes/
+      chart: ./helm/
       reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
