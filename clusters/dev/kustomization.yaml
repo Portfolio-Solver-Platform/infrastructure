@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../prod/
+  - ../base-local/
 
 patches:
   - patch: |-

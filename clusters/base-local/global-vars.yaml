@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-vars
+  namespace: flux-system
+data:
+  DOMAIN_ROOT: "local"
+  DOMAIN_AUTH: "keycloak.local"
+  DOMAIN_MONITORING: "metrics.local"
+  DOMAIN_SECRETS: "secrets.local"

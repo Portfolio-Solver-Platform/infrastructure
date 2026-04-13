@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_ID=""
+NO_DELETION_PROTECTION=false
+DESTROY=false
+AUTO_APPROVE=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-deletion-protection)
+      NO_DELETION_PROTECTION=true
+      shift
+      ;;
+    --destroy)
+      DESTROY=true
+      shift
+      ;;
+    -y|--auto-approve)
+      AUTO_APPROVE=true
+      shift
+      ;;
+    -*)
+      echo "Error: Unknown flag '$1'"
+      echo "Usage: $0 <project_id> [--no-deletion-protection]"
+      exit 1
+      ;;
+    *)
+      if [[ -z "$PROJECT_ID" ]]; then
+        PROJECT_ID="$1"
+      else
+        echo "Error: Unexpected positional argument '$1'"
+        echo "Usage: $0 <project_id> [--no-deletion-protection]"
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$PROJECT_ID" ]]; then
+  echo "Error: 'project_id' is a required positional argument."
+  echo "Usage: $0 <project_id> [--no-deletion-protection]"
+  exit 1
+fi
+
+TOFU_ARGS=()
+
+TOFU_COMMAND="apply"
+if [[ "$DESTROY" == true ]]; then
+  TOFU_COMMAND="destroy"
+fi
+TOFU_ARGS+=("$TOFU_COMMAND")
+
+TOFU_ARGS+=("-var" "project_id=$PROJECT_ID")
+
+if [[ "$NO_DELETION_PROTECTION" == true ]]; then
+  TOFU_ARGS+=("-var" "deletion_protection=false")
+fi
+
+if [[ "$AUTO_APPROVE" == true ]]; then
+  TOFU_ARGS+=("-auto-approve")
+fi
+
+echo "With args: " "${TOFU_ARGS[@]}"
+
+cd ./deployments/google/tofu/
+tofu init
+tofu "${TOFU_ARGS[@]}"

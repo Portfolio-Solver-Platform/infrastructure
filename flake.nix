@@ -60,6 +60,14 @@
                   # The following are only used for development of other services
                   cosign
                   skaffold
+                  opentofu
+                  openbao # For the transit secrets manager init script
+                  (google-cloud-sdk.withExtraComponents (
+                    with google-cloud-sdk.components;
+                    [
+                      gke-gcloud-auth-plugin
+                    ]
+                  ))
                 ]);
             };
           };

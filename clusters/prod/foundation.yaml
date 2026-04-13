@@ -14,3 +14,7 @@ spec:
   dependsOn:
     - name: controllers
     - name: bootstrap
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: global-vars

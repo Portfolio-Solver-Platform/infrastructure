@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR=$(pwd)
+PROJECT_ID=""
+NO_DELETION_PROTECTION=false
+DESTROY=false
+AUTO_APPROVE=false
+KUBERNETES_TRANSIT_TOKEN=""
+TRANSIT_KEY1="N/A (Skipped)"
+TRANSIT_KEY2="N/A (Skipped)"
+TRANSIT_KEY3="N/A (Skipped)"
+TRANSIT_KEY4="N/A (Skipped)"
+TRANSIT_KEY5="N/A (Skipped)"
+TRANSIT_ROOT_TOKEN="N/A (Skipped)"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-deletion-protection)
+      NO_DELETION_PROTECTION=true
+      shift
+      ;;
+    --destroy)
+      DESTROY=true
+      shift
+      ;;
+    -y|--auto-approve)
+      AUTO_APPROVE=true
+      shift
+      ;;
+    --kubernetes-transit-token)
+      if [[ -n "${2:-}" ]]; then
+        KUBERNETES_TRANSIT_TOKEN="$2"
+        shift 2
+      else
+        echo "Error: --kubernetes-bootstrap-token requires a value."
+        exit 1
+      fi
+      ;;
+    -*)
+      echo "Error: Unknown flag '$1'"
+      echo "Usage: $0 <project_id> [--no-deletion-protection]"
+      exit 1
+      ;;
+    *)
+      if [[ -z "$PROJECT_ID" ]]; then
+        PROJECT_ID="$1"
+      else
+        echo "Error: Unexpected positional argument '$1'"
+        echo "Usage: $0 <project_id> [--no-deletion-protection]"
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$PROJECT_ID" ]]; then
+  echo "Error: 'project_id' is a required positional argument."
+  echo "Usage: $0 <project_id> [--no-deletion-protection]"
+  exit 1
+fi
+
+TOFU_ARGS=("$PROJECT_ID")
+
+if [[ "$NO_DELETION_PROTECTION" == true ]]; then
+  TOFU_ARGS+=("--no-deletion-protection")
+fi
+
+if [[ "$DESTROY" == true ]]; then
+  TOFU_ARGS+=("--destroy")
+fi
+
+if [[ "$AUTO_APPROVE" == true ]]; then
+  TOFU_ARGS+=("--auto-approve")
+fi
+
+echo "=== Initialising Google Cloud Infrastructure ==="
+./deployments/google/init-tofu "${TOFU_ARGS[@]}"
+if [[ "$DESTROY" == true ]]; then
+  exit 1
+fi
+echo "Extracting outputs..."
+cd ./deployments/google/tofu/
+CLUSTER_NAME=$(terraform output -raw psp_cluster_name)
+CLUSTER_ZONE=$(terraform output -raw psp_cluster_zone)
+TRANSIT_HOST=$(terraform output -raw secrets_manager_transit_host)
+cd "$ROOT_DIR"
+
+echo " "
+echo "=== Initialising the transit secrets manager ==="
+if [[ -z "$KUBERNETES_TRANSIT_TOKEN" ]]; then
+  TRANSIT_OUTPUT=$(./deployments/google/init-transit | tee /dev/stderr)
+
+  echo "Extracting keys and tokens..."
+  TRANSIT_KEY1=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 1:" | awk '{print $NF}')
+  TRANSIT_KEY2=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 2:" | awk '{print $NF}')
+  TRANSIT_KEY3=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 3:" | awk '{print $NF}')
+  TRANSIT_KEY4=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 4:" | awk '{print $NF}')
+  TRANSIT_KEY5=$(echo "$TRANSIT_OUTPUT" | grep "Unseal Key 5:" | awk '{print $NF}')
+  TRANSIT_ROOT_TOKEN=$(echo "$TRANSIT_OUTPUT" | grep "Initial Root Token:" | awk '{print $NF}')
+  KUBERNETES_TRANSIT_TOKEN=$(echo "$TRANSIT_OUTPUT" | grep "Kubernetes Transit Token:" | awk '{print $NF}')
+
+  echo "Important keys and tokens (will be printed later again):"
+  echo "Unseal Key 1: $TRANSIT_KEY1"
+  echo "Unseal Key 2: $TRANSIT_KEY2"
+  echo "Unseal Key 3: $TRANSIT_KEY3"
+  echo "Unseal Key 4: $TRANSIT_KEY4"
+  echo "Unseal Key 5: $TRANSIT_KEY5"
+  echo "Root Token: $TRANSIT_ROOT_TOKEN"
+  echo "Kubernetes Transit Token: $KUBERNETES_TRANSIT_TOKEN"
+else
+  echo "Skipping transit secrets manager initialization because the Kubernetes transit token was provided"
+fi
+
+echo " "
+echo "=== Connecting kubectl to the live cluster ==="
+echo "Cluster name: $CLUSTER_NAME"
+echo "Cluster zone: $CLUSTER_ZONE"
+echo "Connecting..."
+gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$CLUSTER_ZONE" --project "$PROJECT_ID"
+
+echo " "
+echo "=== Prepare for the main secrets manager in the cluster ==="
+./deployments/google/init-secrets-manager-prepare "$KUBERNETES_TRANSIT_TOKEN"
+echo "Creating transit host secret..."
+./scripts/set-secrets-manager-transit-host "$TRANSIT_HOST"
+
+echo " "
+echo "=== Initialise FluxCD ==="
+flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
+./scripts/update google wip-google
+
+echo " "
+echo "=== Initialise main secrets manager ==="
+SECRETS_OUTPUT=$(./deployments/google/init-secrets-manager | tee /dev/stderr)
+
+SECRETS_KEY1=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 1:" | awk '{print $NF}')
+SECRETS_KEY2=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 2:" | awk '{print $NF}')
+SECRETS_KEY3=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 3:" | awk '{print $NF}')
+SECRETS_KEY4=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 4:" | awk '{print $NF}')
+SECRETS_KEY5=$(echo "$SECRETS_OUTPUT" | grep "Recovery Key 5:" | awk '{print $NF}')
+SECRETS_ROOT_TOKEN=$(echo "$SECRETS_OUTPUT" | grep "Initial Root Token:" | awk '{print $NF}')
+
+echo ""
+echo "=================================================="
+echo "               IMPORTANT SECRETS"
+echo "=================================================="
+echo "CRITICAL: Store these keys in a secure location."
+echo "They will not be displayed again."
+echo ""
+echo "Transit secrets manager:"
+echo "Unseal Key 1: $TRANSIT_KEY1"
+echo "Unseal Key 2: $TRANSIT_KEY2"
+echo "Unseal Key 3: $TRANSIT_KEY3"
+echo "Unseal Key 4: $TRANSIT_KEY4"
+echo "Unseal Key 5: $TRANSIT_KEY5"
+echo "Root Token: $TRANSIT_ROOT_TOKEN"
+echo ""
+echo "Main secrets manager:"
+echo "Recovery Key 1: $SECRETS_KEY1"
+echo "Recovery Key 2: $SECRETS_KEY2"
+echo "Recovery Key 3: $SECRETS_KEY3"
+echo "Recovery Key 4: $SECRETS_KEY4"
+echo "Recovery Key 5: $SECRETS_KEY5"
+echo "Root Token: $SECRETS_ROOT_TOKEN"
+echo "=================================================="
+
+echo ""
+echo "=== Starting reconciliation of cluster ==="
+./scripts/reconcile
+

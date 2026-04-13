@@ -74,3 +74,10 @@ spec:
         kind: GitRepository
         name: gateway
         namespace: flux-system
+  values:
+    keycloak:
+      hostname: ${DOMAIN_AUTH}
+    grafana:
+      hostname: ${DOMAIN_MONITORING}
+    secretsManager:
+      hostname: ${DOMAIN_SECRETS}
