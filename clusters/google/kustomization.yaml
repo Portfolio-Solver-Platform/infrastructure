@@ -4,7 +4,8 @@ kind: Kustomization
 
 resources:
   - ../prod/
-  - ../base-local/
+  - ./database-storage-class.yaml
+  - ./global-vars.yaml
 
 patches:
   - patch: |-
@@ -14,7 +15,7 @@ patches:
         name: bootstrap
         namespace: flux-system
       spec:
-        path: ./bootstrap/dev-prod/
+        path: ./bootstrap/google/
   - patch: |-
       apiVersion: kustomize.toolkit.fluxcd.io/v1
       kind: Kustomization
@@ -22,4 +23,4 @@ patches:
         name: foundation
         namespace: flux-system
       spec:
-        path: ./foundation/dev-prod/
+        path: ./foundation/google/

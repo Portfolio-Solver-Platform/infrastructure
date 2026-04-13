@@ -25,6 +25,10 @@ spec:
         kind: GitRepository
         name: solver-director
         namespace: flux-system
+  values:
+    postgres:
+      persistence:
+        storageClass: database
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease

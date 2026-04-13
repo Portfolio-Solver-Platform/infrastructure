@@ -76,7 +76,9 @@ minikube start "${MINIKUBE_ARGS[@]}"
 
 echo " "
 echo "=== Starting CNI ==="
-cd ../cni && skaffold run -p dev
+cd ../cni
+helm repo add cilium https://helm.cilium.io/
+skaffold run -p dev
 cd "$ROOT_DIR"
 
 echo " "

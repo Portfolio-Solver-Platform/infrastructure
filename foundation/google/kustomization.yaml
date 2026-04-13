@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../prod/
+
+patches:
+  - patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: secrets-manager
+        namespace: secrets-manager
+      spec:
+        valuesFrom:
+          - kind: Secret
+            name: secrets-manager-transit-vars
+            valuesKey: host
+            targetPath: secretsManagerTransit.host
