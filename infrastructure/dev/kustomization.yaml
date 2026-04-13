@@ -40,8 +40,8 @@ patches:
         chart:
           spec:
             valuesFiles:
-              - ./charts/routes/values.yaml
-              - ./charts/routes/values-dev.yaml
+              - ./helm/values.yaml
+              - ./helm/values-dev.yaml
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
