@@ -24,5 +24,8 @@
         "ghcr.io/portfolio-solver-platform/{/,}**"
       ]
     }
-  ]
+  ],
+  "flux": {
+    "managerFilePatterns": ["/\\.yaml$/"]
+  }
 }
