@@ -1,3 +1,11 @@
+resource "google_compute_address" "psp_gateway_ip" {
+  name         = "psp-gateway-ip"
+  region       = var.region
+  description  = "Persistent IP for the PSP gateway"
+  address_type = "EXTERNAL"
+  network_tier = "PREMIUM"
+}
+
 resource "google_container_cluster" "psp" {
   name     = "psp"
   location = var.zone # NOTE: For real production, should use var.region instead to replicate the cluster in all zones

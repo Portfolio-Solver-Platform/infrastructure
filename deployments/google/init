@@ -85,6 +85,7 @@ echo "Extracting outputs..."
 cd ./deployments/google/tofu/
 CLUSTER_NAME=$(terraform output -raw psp_cluster_name)
 CLUSTER_ZONE=$(terraform output -raw psp_cluster_zone)
+CLUSTER_IP=$(terraform output -raw psp_cluster_ip)
 TRANSIT_HOST=$(terraform output -raw secrets_manager_transit_host)
 cd "$ROOT_DIR"
 
@@ -166,6 +167,8 @@ echo "Recovery Key 4: $SECRETS_KEY4"
 echo "Recovery Key 5: $SECRETS_KEY5"
 echo "Root Token: $SECRETS_ROOT_TOKEN"
 echo "=================================================="
+echo ""
+echo "The IP of the cluster: $CLUSTER_IP"
 
 echo ""
 echo "=== Starting reconciliation of cluster ==="
