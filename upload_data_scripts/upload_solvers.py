@@ -6,8 +6,18 @@ Override image URLs via environment variables for local development.
 import os
 import sys
 import requests
+import psp.config as psp_config
+from psp.auth import get_access_token
 
-API_BASE = "http://local/api/solverdirector/v1"
+
+def _api_base() -> str:
+    return psp_config.load()["base_url"].rstrip("/") + "/api/solverdirector/v1"
+
+
+def _headers() -> dict:
+    return {"Authorization": f"Bearer {get_access_token()}"}
+
+
 REGISTRY = "ghcr.io/portfolio-solver-platform"
 
 # Maps image_name -> (image URL, solver names supported)
@@ -25,12 +35,13 @@ def register_solver(image_name: str, image_url: str, solver_names: list[str]):
     print(f"Registering {image_name} ({image_url})...", file=sys.stderr)
 
     response = requests.post(
-        f"{API_BASE}/solvers",
+        f"{_api_base()}/solvers",
         data={
             "image_name": image_name,
             "image_url": image_url,
             "names": ",".join(solver_names),
         },
+        headers=_headers(),
     )
 
     if response.status_code == 400 and "already exists" in response.text.lower():
@@ -44,8 +55,9 @@ def register_solver(image_name: str, image_url: str, solver_names: list[str]):
 
 def _update_solver_image_url(image_name: str, image_url: str):
     response = requests.patch(
-        f"{API_BASE}/solvers/images/{image_name}",
+        f"{_api_base()}/solvers/images/{image_name}",
         data={"image_url": image_url},
+        headers=_headers(),
     )
     response.raise_for_status()
     print(f"UPDATED: {image_name} -> {image_url}", file=sys.stderr)

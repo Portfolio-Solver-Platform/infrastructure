@@ -5,15 +5,24 @@ Upload all MiniZinc problems from problems/ directory to the API
 import sys
 import requests
 from pathlib import Path
+import psp.config as psp_config
+from psp.auth import get_access_token
 
-API_BASE = "http://local/api/solverdirector/v1"
 PROBLEMS_DIR = Path(__file__).parent.parent.parent / "problems"
+
+
+def _api_base() -> str:
+    return psp_config.load()["base_url"].rstrip("/") + "/api/solverdirector/v1"
+
+
+def _headers() -> dict:
+    return {"Authorization": f"Bearer {get_access_token()}"}
 
 
 def get_or_create_minizinc_group():
     """Get or create the minizinc group"""
     # Try to find existing
-    response = requests.get(f"{API_BASE}/groups")
+    response = requests.get(f"{_api_base()}/groups", headers=_headers())
     if response.status_code == 200:
         for group in response.json():
             if group["name"] == "minizinc":
@@ -21,8 +30,9 @@ def get_or_create_minizinc_group():
 
     # Create new
     response = requests.post(
-        f"{API_BASE}/groups",
-        json={"name": "minizinc", "description": "Minizinc formats"}
+        f"{_api_base()}/groups",
+        json={"name": "minizinc", "description": "Minizinc formats"},
+        headers=_headers(),
     )
     response.raise_for_status()
     return response.json()["id"]
@@ -32,8 +42,9 @@ def upload_problem_with_file(name, mzn_file, group_id):
     """Upload problem with .mzn file"""
     # Step 1: Create problem
     response = requests.post(
-        f"{API_BASE}/problems",
-        json={"name": name, "group_ids": [group_id]}
+        f"{_api_base()}/problems",
+        json={"name": name, "group_ids": [group_id]},
+        headers=_headers(),
     )
     response.raise_for_status()
     problem_id = response.json()["id"]
@@ -41,8 +52,9 @@ def upload_problem_with_file(name, mzn_file, group_id):
     # Step 2: Upload file
     with open(mzn_file, 'rb') as f:
         response = requests.put(
-            f"{API_BASE}/problems/{problem_id}/file",
-            files={"file": (mzn_file.name, f, "text/plain")}
+            f"{_api_base()}/problems/{problem_id}/file",
+            files={"file": (mzn_file.name, f, "text/plain")},
+            headers=_headers(),
         )
     response.raise_for_status()
     return problem_id
@@ -51,8 +63,9 @@ def upload_problem_with_file(name, mzn_file, group_id):
 def upload_problem_without_file(name, group_id):
     """Upload self-contained problem (no file)"""
     response = requests.post(
-        f"{API_BASE}/problems",
-        json={"name": name, "group_ids": [group_id]}
+        f"{_api_base()}/problems",
+        json={"name": name, "group_ids": [group_id]},
+        headers=_headers(),
     )
     response.raise_for_status()
     return response.json()["id"]
@@ -62,8 +75,9 @@ def upload_instance(problem_id, dzn_file):
     """Upload instance file for a problem"""
     with open(dzn_file, 'rb') as f:
         response = requests.post(
-            f"{API_BASE}/problems/{problem_id}/instances",
-            files={"file": (dzn_file.name, f, "text/plain")}
+            f"{_api_base()}/problems/{problem_id}/instances",
+            files={"file": (dzn_file.name, f, "text/plain")},
+            headers=_headers(),
         )
     response.raise_for_status()
     return response.json()["id"]
