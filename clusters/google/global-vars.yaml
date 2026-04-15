@@ -4,7 +4,7 @@ metadata:
   name: global-vars
   namespace: flux-system
 data:
-  DOMAIN_ROOT: "psp.jonasbork.com"
-  DOMAIN_AUTH: "auth.psp.jonasbork.com"
-  DOMAIN_MONITORING: "metrics.psp.jonasbork.com"
-  DOMAIN_SECRETS: "secrets.psp.jonasbork.com"
+  DOMAIN_ROOT: "psp.jonasbork.dk"
+  DOMAIN_AUTH: "auth.psp.jonasbork.dk"
+  DOMAIN_MONITORING: "metrics.psp.jonasbork.dk"
+  DOMAIN_SECRETS: "secrets.psp.jonasbork.dk"
