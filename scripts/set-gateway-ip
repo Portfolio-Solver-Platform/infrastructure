@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <ip>"
+    exit 1
+fi
+
+export GATEWAY_IP="$1"
+CONFIG_PATH="./scripts/helpers/gateway-vars.yaml"
+
+if [ ! -f "$CONFIG_PATH" ]; then
+    echo "Error: $CONFIG_PATH not found."
+    exit 1
+fi
+
+echo "Applying config to cluster..."
+yq '
+  (select(.kind == "ConfigMap") | .data.ipAddress) = env(GATEWAY_IP)
+' "$CONFIG_PATH" | kubectl apply -f -
+
+echo "Success! Applied config with host '$GATEWAY_IP'"
+

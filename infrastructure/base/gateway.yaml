@@ -54,3 +54,9 @@ spec:
       hostname: ${DOMAIN_MONITORING}
     secretsManager:
       hostname: ${DOMAIN_SECRETS}
+  valuesFrom:
+    - kind: ConfigMap
+      name: gateway-vars
+      valuesKey: ipAddress
+      targetPath: gateway.ipAddress
+      optional: true

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-vars
+  namespace: gateway
+data:
+  ipAddress: <insert-from-script>
