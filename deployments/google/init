@@ -131,7 +131,7 @@ echo "Creating transit host secret..."
 echo " "
 echo "=== Initialise FluxCD ==="
 flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
-./scripts/update google wip-google
+./scripts/update google wip-google-ip
 
 echo " "
 echo "=== Initialise main secrets manager ==="
