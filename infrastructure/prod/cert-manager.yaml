@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+  labels:
+    psp.io/encrypt: "true"
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/Portfolio-Solver-Platform/cert-manager.git
+  ref:
+    branch: wip-https
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 5m
+  driftDetection:
+    mode: warn
+  chart:
+    spec:
+      chart: ./helm/
+      sourceRef:
+        kind: GitRepository
+        name: cert-manager
+        namespace: flux-system
+
+      reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
+      valuesFiles:
+        - ./helm/values.yaml
+  values:
+    issuer:
+      email: test@jonasbork.dk
+    certificates:
+      root:
+        secretName: ${TLS_CERTIFICATE_NAME_ROOT}
+        domainName: ${DOMAIN_ROOT}
+      auth:
+        secretName: ${TLS_CERTIFICATE_NAME_AUTH}
+        domainName: ${DOMAIN_AUTH}
+      monitoring:
+        secretName: ${TLS_CERTIFICATE_NAME_MONITORING}
+        domainName: ${DOMAIN_MONITORING}
+      secrets:
+        secretName: ${TLS_CERTIFICATE_NAME_SECRETS}
+        domainName: ${DOMAIN_SECRETS}

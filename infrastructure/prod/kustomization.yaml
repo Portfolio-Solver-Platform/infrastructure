@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ../base/
+  - ./cert-manager.yaml
 
 patches:
   - patch: |-
