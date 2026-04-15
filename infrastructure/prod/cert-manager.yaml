@@ -20,7 +20,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cert-manager
+  name: cert-manager-system
   namespace: cert-manager
 spec:
   interval: 5m
@@ -28,7 +28,30 @@ spec:
     mode: warn
   chart:
     spec:
-      chart: ./helm/
+      chart: ./helm/system/
+      sourceRef:
+        kind: GitRepository
+        name: cert-manager
+        namespace: flux-system
+
+      reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
+      valuesFiles:
+        - ./helm/values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager-resources
+  namespace: cert-manager
+spec:
+  interval: 5m
+  dependsOn:
+    - name: cert-manager-system
+  driftDetection:
+    mode: warn
+  chart:
+    spec:
+      chart: ./helm/resources/
       sourceRef:
         kind: GitRepository
         name: cert-manager
