@@ -129,6 +129,10 @@ echo "Creating transit host secret..."
 ./scripts/set-secrets-manager-transit-host "$TRANSIT_HOST"
 
 echo " "
+echo "=== Set the gateway IP ==="
+./scripts/set-gateway-ip "$CLUSTER_IP"
+
+echo " "
 echo "=== Initialise FluxCD ==="
 flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
 ./scripts/update google wip-google-ip
