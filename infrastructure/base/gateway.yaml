@@ -13,7 +13,7 @@ spec:
   interval: 5m
   url: https://github.com/Portfolio-Solver-Platform/gateway.git
   ref:
-    branch: wip-ip
+    branch: wip-https
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -54,6 +54,14 @@ spec:
       hostname: ${DOMAIN_MONITORING}
     secretsManager:
       hostname: ${DOMAIN_SECRETS}
+    gateway:
+      hostname: ${DOMAIN_ROOT}
+      https:
+        certificates:
+          root: ${TLS_CERTIFICATE_NAME_ROOT}
+          keycloak: ${TLS_CERTIFICATE_NAME_AUTH}
+          grafana: ${TLS_CERTIFICATE_NAME_MONITORING}
+          secrets: ${TLS_CERTIFICATE_NAME_SECRETS}
   valuesFrom:
     - kind: ConfigMap
       name: gateway-vars
