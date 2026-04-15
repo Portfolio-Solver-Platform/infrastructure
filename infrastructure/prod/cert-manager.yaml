@@ -36,7 +36,7 @@ spec:
 
       reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
       valuesFiles:
-        - ./helm/values.yaml
+        - ./helm/system/values.yaml
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -59,7 +59,7 @@ spec:
 
       reconcileStrategy: Revision # Reconcile on file changes, not Helm chart version changes
       valuesFiles:
-        - ./helm/values.yaml
+        - ./helm/resources/values.yaml
   values:
     issuer:
       email: test@jonasbork.dk
