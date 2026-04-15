@@ -32,7 +32,7 @@ Manual steps:
 The platform will now deploy. Additional information for development:
 - You can access the services through the gateway by using `minikube tunnel`. There after to get the IP address execute the `access.sh` script. Remember to follow the instructions the script gives you.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
-- Run the `post-data-setup.sh` script to initialise the data
+- Initialise the data — see [Data Setup](#data-setup)
 
 ## Production Setup
 
@@ -48,5 +48,17 @@ Initialising the cluster:
 - When the [secrets manager](https://github.com/Portfolio-Solver-Platform/secrets-manager) is up, follow the secrets manager production init guide.
 - For the secrets manager Terraform to run, you must create a secret containing the root token similar to the one created in dev mode. When this has run once, it can be deleted since it from then on can use its service account.
 - Wait for all the services to be up. You can use `flux get all -A` to get the status of all the services
-- Run the `post-data-setup.sh` script to initialise the data
+- Initialise the data — see [Data Setup](#data-setup)
+
+## Data Setup
+
+Requires [`psp-cli`](https://github.com/Portfolio-Solver-Platform/psp-cli) and `jq`.
+
+```bash
+psp config set client_id admin-app
+psp auth login
+./post-data-setup.sh <problems-dir>
+```
+
+To override the solver image: `MINIZINC_SOLVERS_IMAGE=<url> ./post-data-setup.sh <problems-dir>`
 
