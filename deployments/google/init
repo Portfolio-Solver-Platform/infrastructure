@@ -135,7 +135,7 @@ echo "=== Set the gateway IP ==="
 echo " "
 echo "=== Initialise FluxCD ==="
 flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
-./scripts/update google wip-google-ip
+./scripts/update google wip-https
 
 echo " "
 echo "=== Initialise main secrets manager ==="
