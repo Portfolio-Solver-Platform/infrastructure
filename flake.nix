@@ -42,7 +42,29 @@
 
             validateFlux = {
               enable = true;
-              entry = "./tests/validate-flux.sh";
+              name = "Validate Flux configuration";
+              entry =
+                let
+                  # Use writeShellScript to create a sandboxed execution context
+                  wrapper = pkgs.writeShellScript "validate-flux-wrapper" ''
+                    # 1. Expose the exact tools your script needs to its PATH
+                    export PATH="${
+                      pkgs.lib.makeBinPath (
+                        with pkgs;
+                        [
+                          pkgsUnstable.fluxcd
+                          kubeconform
+                          yq-go
+                          # Add any other missing tools here (like jq, coreutils, etc.)
+                        ]
+                      )
+                    }:$PATH"
+
+                    # 2. Execute your local script, passing along any modified files as arguments
+                    exec ./tests/validate-flux.sh "$@"
+                  '';
+                in
+                builtins.toString wrapper;
             };
           };
         };
