@@ -32,6 +32,10 @@ patches:
             value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
           - name: frontend_url
             value: "http://${DOMAIN_AUTH}"
+          - name: enable_password_policy
+            value: false
+          - name: force_mfa
+            value: false
   - patch: |-
       apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
