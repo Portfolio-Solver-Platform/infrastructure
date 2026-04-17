@@ -85,6 +85,7 @@ echo "Extracting outputs..."
 cd ./deployments/google/tofu/
 CLUSTER_NAME=$(terraform output -raw psp_cluster_name)
 CLUSTER_ZONE=$(terraform output -raw psp_cluster_zone)
+CLUSTER_IP=$(terraform output -raw psp_cluster_ip)
 TRANSIT_HOST=$(terraform output -raw secrets_manager_transit_host)
 cd "$ROOT_DIR"
 
@@ -128,9 +129,13 @@ echo "Creating transit host secret..."
 ./scripts/set-secrets-manager-transit-host "$TRANSIT_HOST"
 
 echo " "
+echo "=== Set the gateway IP ==="
+./scripts/set-gateway-ip "$CLUSTER_IP"
+
+echo " "
 echo "=== Initialise FluxCD ==="
 flux install || true # If it has already been installed, don't fail (the update script will fail instead if it has not been installed)
-./scripts/update google wip-google
+./scripts/update google
 
 echo " "
 echo "=== Initialise main secrets manager ==="
@@ -147,7 +152,7 @@ echo ""
 echo "=================================================="
 echo "               IMPORTANT SECRETS"
 echo "=================================================="
-echo "CRITICAL: Store these keys in a secure location."
+echo "CRITICAL: Store these in a secure location."
 echo "They will not be displayed again."
 echo ""
 echo "Transit secrets manager:"
@@ -157,6 +162,7 @@ echo "Unseal Key 3: $TRANSIT_KEY3"
 echo "Unseal Key 4: $TRANSIT_KEY4"
 echo "Unseal Key 5: $TRANSIT_KEY5"
 echo "Root Token: $TRANSIT_ROOT_TOKEN"
+echo "Kubernetes Transit Token: $KUBERNETES_TRANSIT_TOKEN"
 echo ""
 echo "Main secrets manager:"
 echo "Recovery Key 1: $SECRETS_KEY1"
@@ -166,6 +172,8 @@ echo "Recovery Key 4: $SECRETS_KEY4"
 echo "Recovery Key 5: $SECRETS_KEY5"
 echo "Root Token: $SECRETS_ROOT_TOKEN"
 echo "=================================================="
+echo ""
+echo "The IP of the cluster: $CLUSTER_IP"
 
 echo ""
 echo "=== Starting reconciliation of cluster ==="

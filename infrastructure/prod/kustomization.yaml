@@ -3,44 +3,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../base/
-
-patches:
-  - patch: |-
-      apiVersion: infra.contrib.fluxcd.io/v1alpha2
-      kind: Terraform
-      metadata:
-        name: keycloak-setup
-        namespace: flux-system
-      spec:
-        vars:
-          - name: environment
-            value: "prod"
-          - name: keycloak_url
-            value: "http://keycloak-service.keycloak.svc.cluster.local:8080"
-          - name: keycloak_hostname
-            value: "${DOMAIN_AUTH}"
-  - patch: |-
-      apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      metadata:
-        name: rabbit-mq
-        namespace: rabbit-mq
-      spec:
-        chart:
-          spec:
-            valuesFiles:
-              - ./helm/values.yaml
-              - ./helm/values-prod.yaml
-  - patch: |-
-      apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      metadata:
-        name: pod-scheduler
-        namespace: pod-scheduler
-      spec:
-        chart:
-          spec:
-            valuesFiles:
-              - ./helm/values.yaml
-              - ./helm/values-prod.yaml
+  - ../base-prod/
+  - ./cert-manager.yaml
