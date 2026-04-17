@@ -55,13 +55,13 @@
                           pkgsUnstable.fluxcd
                           kubeconform
                           yq-go
-                          # Add any other missing tools here (like jq, coreutils, etc.)
+                          kubectl
                         ]
                       )
                     }:$PATH"
 
                     # 2. Execute your local script, passing along any modified files as arguments
-                    exec ./tests/validate-flux.sh "$@"
+                    exec ${pkgs.bash}/bin/bash ./tests/validate-flux.sh "$@"
                   '';
                 in
                 builtins.toString wrapper;
