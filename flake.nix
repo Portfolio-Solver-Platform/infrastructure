@@ -35,6 +35,10 @@
             yamllint.enable = true;
             nixfmt.enable = true;
             trufflehog.enable = true;
+            actionlint.enable = true;
+            shellcheck.enable = true;
+            ruff.enable = true;
+            markdownlint.enable = true;
           };
         };
       in
