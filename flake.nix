@@ -3,6 +3,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -11,6 +15,7 @@
       nixpkgs,
       nixpkgs-unstable,
       flake-utils,
+      git-hooks,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
@@ -23,8 +28,21 @@
         pkgsUnstable = import nixpkgs-unstable {
           inherit system;
         };
+
+        preCommitCheck = git-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            yamllint.enable = true;
+            nixfmt.enable = true;
+            trufflehog.enable = true;
+          };
+        };
       in
       {
+        checks = {
+          inherit preCommitCheck;
+        };
+
         devShells =
           let
             ciPackages = with pkgs; [
@@ -40,6 +58,7 @@
             };
 
             default = pkgs.mkShell {
+              inherit (preCommitCheck) shellHook;
               packages =
                 ciPackages
                 ++ (with pkgs; [
@@ -51,6 +70,7 @@
                   kubernetes-helm
                   terraform
                   yq-go
+                  jq
                   (python3.withPackages (
                     ps: with ps; [
                       requests
