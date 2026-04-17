@@ -39,6 +39,11 @@
             shellcheck.enable = true;
             ruff.enable = true;
             markdownlint.enable = true;
+
+            validateFlux = {
+              enable = true;
+              entry = "./tests/validate-flux.sh";
+            };
           };
         };
       in
