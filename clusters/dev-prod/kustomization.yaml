@@ -23,3 +23,11 @@ patches:
         namespace: flux-system
       spec:
         path: ./foundation/dev-prod/
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: infrastructure
+        namespace: flux-system
+      spec:
+        path: ./infrastructure/dev-prod/

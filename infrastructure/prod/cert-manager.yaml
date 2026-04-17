@@ -62,7 +62,7 @@ spec:
         - ./helm/resources/values.yaml
   values:
     issuer:
-      email: test@jonasbork.dk
+      email: ${TLS_ISSUER_EMAIL}
     certificates:
       root:
         secretName: ${TLS_CERTIFICATE_NAME_ROOT}
