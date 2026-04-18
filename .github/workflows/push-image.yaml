@@ -37,7 +37,7 @@ jobs:
           branch=${GITHUB_REF_NAME//\//-}
           sha=${GITHUB_SHA::8}
           ts=$(date +'%Y%m%d%H%M%S')
-          echo "BUILD_TAG=${branch}-${sha}-${ts}" >> $GITHUB_ENV
+          echo "BUILD_TAG=${branch}-${sha}-${ts}" >> "$GITHUB_ENV"
 
       - name: Generate Tags
         run: |
@@ -49,8 +49,8 @@ jobs:
             echo "Building from main branch. 'latest' tag will be applied."
           fi
 
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
-          echo "DOCKER_TAGS=$TAGS" >> $GITHUB_ENV
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "DOCKER_TAGS=$TAGS" >> "$GITHUB_ENV"
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6

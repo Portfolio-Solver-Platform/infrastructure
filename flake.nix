@@ -32,17 +32,21 @@
         preCommitCheck = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
-            yamllint.enable = true;
             nixfmt.enable = true;
             trufflehog.enable = true;
             actionlint.enable = true;
             shellcheck.enable = true;
             ruff.enable = true;
-            markdownlint.enable = true;
+            yamllint.enable = true;
+            markdownlint = {
+              enable = true;
+              args = [ "--fix" ];
+            };
 
             validateFlux = {
               enable = true;
               name = "Validate Flux configuration";
+              pass_filenames = false;
               entry =
                 let
                   # Use writeShellScript to create a sandboxed execution context
@@ -61,7 +65,7 @@
                     }:$PATH"
 
                     # 2. Execute your local script, passing along any modified files as arguments
-                    exec ${pkgs.bash}/bin/bash ./tests/validate-flux.sh "$@"
+                    exec ${pkgs.bash}/bin/bash ./tests/validate-flux.sh
                   '';
                 in
                 builtins.toString wrapper;
@@ -70,58 +74,43 @@
         };
       in
       {
-        checks = {
-          inherit preCommitCheck;
-        };
-
-        devShells =
-          let
-            ciPackages = with pkgs; [
-              pkgsUnstable.fluxcd
-              kubeconform
-              yamllint
-              bash
-            ];
-          in
-          {
-            ci = pkgs.mkShell {
-              packages = ciPackages;
-            };
-
-            default = pkgs.mkShell {
-              inherit (preCommitCheck) shellHook;
-              packages =
-                ciPackages
-                ++ (with pkgs; [
-                  minikube
-                  docker
-                  git
-                  kubectl
-                  kustomize
-                  kubernetes-helm
-                  terraform
-                  yq-go
-                  jq
-                  (python3.withPackages (
-                    ps: with ps; [
-                      requests
-                    ]
-                  ))
-
-                  # The following are only used for development of other services
-                  cosign
-                  skaffold
-                  opentofu
-                  openbao # For the transit secrets manager init script
-                  (google-cloud-sdk.withExtraComponents (
-                    with google-cloud-sdk.components;
-                    [
-                      gke-gcloud-auth-plugin
-                    ]
-                  ))
-                ]);
-            };
+        devShells = {
+          ci = pkgs.mkShell {
+            inherit (preCommitCheck) shellHook;
           };
+
+          default = pkgs.mkShell {
+            inherit (preCommitCheck) shellHook;
+            packages = with pkgs; [
+              minikube
+              docker
+              git
+              kubectl
+              kustomize
+              kubernetes-helm
+              terraform
+              yq-go
+              jq
+              (python3.withPackages (
+                ps: with ps; [
+                  requests
+                ]
+              ))
+
+              # The following are only used for development of other services
+              cosign
+              skaffold
+              opentofu
+              openbao # For the transit secrets manager init script
+              (google-cloud-sdk.withExtraComponents (
+                with google-cloud-sdk.components;
+                [
+                  gke-gcloud-auth-plugin
+                ]
+              ))
+            ];
+          };
+        };
       }
     );
 }

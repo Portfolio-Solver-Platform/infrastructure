@@ -21,13 +21,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
 
       - name: Install environment
-        run: nix develop .#ci
-
-      - name: Lint YAML
-        run: nix develop .#ci --command yamllint .
-
-      - name: Validate
-        run: nix develop .#ci --command ./tests/validate-flux.sh
+        run: nix develop .#ci --command pre-commit run -a
 
   required:
     name: Required checks
