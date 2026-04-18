@@ -3,6 +3,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -11,6 +15,7 @@
       nixpkgs,
       nixpkgs-unstable,
       flake-utils,
+      git-hooks,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
@@ -23,54 +28,89 @@
         pkgsUnstable = import nixpkgs-unstable {
           inherit system;
         };
-      in
-      {
-        devShells =
-          let
-            ciPackages = with pkgs; [
-              pkgsUnstable.fluxcd
-              kubeconform
-              yamllint
-              bash
-            ];
-          in
-          {
-            ci = pkgs.mkShell {
-              packages = ciPackages;
+
+        preCommitCheck = git-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            nixfmt.enable = true;
+            trufflehog.enable = true;
+            actionlint.enable = true;
+            shellcheck.enable = true;
+            ruff.enable = true;
+            yamllint.enable = true;
+            markdownlint = {
+              enable = true;
+              args = [ "--fix" ];
             };
 
-            default = pkgs.mkShell {
-              packages =
-                ciPackages
-                ++ (with pkgs; [
-                  minikube
-                  docker
-                  git
-                  kubectl
-                  kustomize
-                  kubernetes-helm
-                  terraform
-                  yq-go
-                  (python3.withPackages (
-                    ps: with ps; [
-                      requests
-                    ]
-                  ))
+            validateFlux = {
+              enable = true;
+              name = "Validate Flux configuration";
+              pass_filenames = false;
+              entry =
+                let
+                  # Use writeShellScript to create a sandboxed execution context
+                  wrapper = pkgs.writeShellScript "validate-flux-wrapper" ''
+                    # 1. Expose the exact tools your script needs to its PATH
+                    export PATH="${
+                      pkgs.lib.makeBinPath (
+                        with pkgs;
+                        [
+                          pkgsUnstable.fluxcd
+                          kubeconform
+                          yq-go
+                          kubectl
+                        ]
+                      )
+                    }:$PATH"
 
-                  # The following are only used for development of other services
-                  cosign
-                  skaffold
-                  opentofu
-                  openbao # For the transit secrets manager init script
-                  (google-cloud-sdk.withExtraComponents (
-                    with google-cloud-sdk.components;
-                    [
-                      gke-gcloud-auth-plugin
-                    ]
-                  ))
-                ]);
+                    # 2. Execute your local script, passing along any modified files as arguments
+                    exec ${pkgs.bash}/bin/bash ./tests/validate-flux.sh
+                  '';
+                in
+                builtins.toString wrapper;
             };
           };
+        };
+      in
+      {
+        devShells = {
+          ci = pkgs.mkShell {
+            inherit (preCommitCheck) shellHook;
+          };
+
+          default = pkgs.mkShell {
+            inherit (preCommitCheck) shellHook;
+            packages = with pkgs; [
+              minikube
+              docker
+              git
+              kubectl
+              kustomize
+              kubernetes-helm
+              terraform
+              yq-go
+              jq
+              (python3.withPackages (
+                ps: with ps; [
+                  requests
+                ]
+              ))
+
+              # The following are only used for development of other services
+              cosign
+              skaffold
+              opentofu
+              openbao # For the transit secrets manager init script
+              (google-cloud-sdk.withExtraComponents (
+                with google-cloud-sdk.components;
+                [
+                  gke-gcloud-auth-plugin
+                ]
+              ))
+            ];
+          };
+        };
       }
     );
 }
