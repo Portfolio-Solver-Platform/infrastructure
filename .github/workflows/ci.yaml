@@ -21,6 +21,9 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
 
       - name: Install environment
+        run: nix develop .#ci
+
+      - name: Run checks
         run: nix develop .#ci --command pre-commit run -a
 
   required:
