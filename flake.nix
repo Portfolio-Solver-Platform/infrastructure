@@ -49,22 +49,16 @@
               pass_filenames = false;
               entry =
                 let
-                  # Use writeShellScript to create a sandboxed execution context
-                  wrapper = pkgs.writeShellScript "validate-flux-wrapper" ''
-                    # 1. Expose the exact tools your script needs to its PATH
-                    export PATH="${
-                      pkgs.lib.makeBinPath (
-                        with pkgs;
-                        [
-                          pkgsUnstable.fluxcd
-                          kubeconform
-                          yq-go
-                          kubectl
-                        ]
-                      )
-                    }:$PATH"
+                  packages = with pkgs; [
+                    pkgsUnstable.fluxcd
+                    kubeconform
+                    yq-go
+                    kubectl
+                  ];
 
-                    # 2. Execute your local script, passing along any modified files as arguments
+                  wrapper = pkgs.writeShellScript "validate-flux-wrapper" ''
+                    export PATH="${pkgs.lib.makeBinPath packages}:$PATH"
+
                     exec ${pkgs.bash}/bin/bash ./tests/validate-flux.sh
                   '';
                 in
