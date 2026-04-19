@@ -1,13 +1,14 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
 metadata:
   name: user
   namespace: flux-system
 spec:
-  interval: 5m
-  url: https://github.com/Portfolio-Solver-Platform/user.git
+  interval: 10m
+  url: oci://ghcr.io/portfolio-solver-platform/charts/user
   ref:
-    branch: main
+    tag: "1.1.0"
+    digest: "sha256:9a357e7ad7d348aa7d05ec65dad31eb034127c915c20ffb3c692e936f6837579"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -16,12 +17,7 @@ metadata:
   namespace: psp
 spec:
   interval: 5m
-  chart:
-    spec:
-      chart: ./helm/
-      sourceRef:
-        kind: GitRepository
-        name: user
-        namespace: flux-system
-  values:
-    image: ghcr.io/portfolio-solver-platform/user:main-b9f68c33-20260324130342
+  chartRef:
+    kind: OCIRepository
+    name: user
+    namespace: flux-system
