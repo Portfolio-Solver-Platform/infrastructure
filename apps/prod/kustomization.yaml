@@ -13,8 +13,6 @@ patches:
         name: user
         namespace: psp
       spec:
-        chart:
-          spec:
-            valuesFiles:
-              - ./helm/values.yaml
-              - ./helm/values-prod.yaml
+        values:
+          hpa:
+            minReplicas: 2
