@@ -58,8 +58,8 @@ Initialising the cluster:
 For setting up the platform on a new cloud provider, you must copy the steps in the `./deployments/google/` folder.
 The following settings are important for security:
 
-  - Enable etcd encryption at rest. How this is done depends on the cloud provider, but usually involves setting up a key in their proprietary Key Management Service (KMS) and during the cluster setup, configuring it to use the key for etcd encryption at rest.
-  - Enable a Container Networking Interface (CNI) that supports the native Kubernetes network policies. The default CNI typically does _not_ support this, so it is important to explicitly enable.
+- Enable etcd encryption at rest. How this is done depends on the cloud provider, but usually involves setting up a key in their proprietary Key Management Service (KMS) and during the cluster setup, configuring it to use the key for etcd encryption at rest.
+- Enable a Container Networking Interface (CNI) that supports the native Kubernetes network policies. The default CNI typically does _not_ support this, so it is important to explicitly enable.
 
 ## Data Setup
 
