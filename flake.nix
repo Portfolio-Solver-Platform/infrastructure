@@ -76,6 +76,7 @@
           default = pkgs.mkShell {
             inherit (preCommitCheck) shellHook;
             packages = with pkgs; [
+              pkgsUnstable.fluxcd
               minikube
               docker
               git
