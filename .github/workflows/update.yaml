@@ -10,7 +10,7 @@ on:
 
 jobs:
   dispatch-infra-deps:
-    uses: Portfolio-Solver-Platform/deps-bot/.github/workflows/trigger-run.yaml@main
+    uses: Portfolio-Solver-Platform/deps-bot/.github/workflows/trigger-run.yaml@ca767769a2c3400e97db24f0b4adfaec9724b874 # main
     with:
       repository: ${{ github.repository_owner }}/infrastructure
     secrets:

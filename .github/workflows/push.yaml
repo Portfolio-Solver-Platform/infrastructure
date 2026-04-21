@@ -81,6 +81,6 @@ jobs:
 
   trigger-update:
     needs: push 
-    uses: Portfolio-Solver-Platform/infrastructure/.github/workflows/update.yaml@main
+    uses: Portfolio-Solver-Platform/infrastructure/.github/workflows/update.yaml@8c0d9cf4de3849dde5f8941effc4e54e7a3b3a7f # main
     secrets:
       repo_bot_private_key: ${{ secrets.repo_bot_private_key }}
