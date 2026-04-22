@@ -65,7 +65,7 @@ The following settings are important for security:
 
 ## Data Setup
 
-Requires [`psp-cli`](https://github.com/Portfolio-Solver-Platform/psp-cli) and `jq`.
+Requires [`psp-cli`](https://github.com/Portfolio-Solver-Platform/psp-cli).
 
 ```bash
 psp config set client_id admin-app
