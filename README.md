@@ -53,6 +53,7 @@ Initialising the cluster:
 - IMPORTANT: The script prints various secrets to the terminal which you must save securely.
 - Wait for all the services to be up. You can use `./scripts/watch` to get a live status of all the services.
 - All secrets are randomly generated, but available in the secrets manager. Thus, you must access the secrets-manager using the root token that the script printed to the terminal. Here, you can find the credentials for the other services, like the auth-manager bootstrap admin credentials.
+  - You access the secrets manager using port-forwarding: `kubectl port-forward -n secrets-manager svc/secrets-manager-openbao 8200:8200`
 - Initialise the data — see [Data Setup](#data-setup)
 
 For setting up the platform on a new cloud provider, you must copy the steps in the `./deployments/google/` folder.
