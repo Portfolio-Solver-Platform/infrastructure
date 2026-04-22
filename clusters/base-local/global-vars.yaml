@@ -7,4 +7,3 @@ data:
   DOMAIN_ROOT: "local"
   DOMAIN_AUTH: "keycloak.local"
   DOMAIN_MONITORING: "metrics.local"
-  DOMAIN_SECRETS: "secrets.local"

@@ -73,6 +73,3 @@ spec:
       monitoring:
         secretName: ${TLS_CERTIFICATE_NAME_MONITORING}
         domainName: ${DOMAIN_MONITORING}
-      secrets:
-        secretName: ${TLS_CERTIFICATE_NAME_SECRETS}
-        domainName: ${DOMAIN_SECRETS}
