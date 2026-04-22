@@ -7,10 +7,8 @@ data:
   DOMAIN_ROOT: "psp.jonasbork.dk"
   DOMAIN_AUTH: "auth.psp.jonasbork.dk"
   DOMAIN_MONITORING: "metrics.psp.jonasbork.dk"
-  DOMAIN_SECRETS: "secrets.psp.jonasbork.dk"
   TLS_ISSUER_EMAIL: "tls@jonasbork.dk"
 
   TLS_CERTIFICATE_NAME_ROOT: "tls-cert-root"
   TLS_CERTIFICATE_NAME_AUTH: "tls-cert-auth"
   TLS_CERTIFICATE_NAME_MONITORING: "tls-cert-metrics"
-  TLS_CERTIFICATE_NAME_SECRETS: "tls-cert-secrets"
