@@ -32,6 +32,7 @@ Useful information:
   - If this is not done, Flux will notice your own deployment and replace it with the one on GitHub.
 - To make your cluster track a different infrastructure branch, use `scripts/update`.
 - Use `scripts/watch` to see the live status of the services.
+- You can access the secrets manager using port-forwarding: `kubectl port-forward -n secrets-manager svc/secrets-manager-openbao 8200:8200`
 
 ## Production Setup
 
