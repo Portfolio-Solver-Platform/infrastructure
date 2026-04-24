@@ -22,7 +22,7 @@ fi
 # --- Step 2: Register solvers ---
 echo "=== Registering solvers ==="
 image_url="${MINIZINC_SOLVERS_IMAGE:-$REGISTRY/minizinc-solvers:latest}"
-if ! psp solvers register minizinc-solvers "$image_url" --names "chuffed,gecode,ortools,coinbc" 2>/dev/null; then
+if ! psp solvers register minizinc-solvers "$image_url" --names "chuffed,cp-sat,coinbc,choco,dexter,huub,izplus,parasol,picat,pumpkin,yuck" 2>/dev/null; then
     psp solvers update-image minizinc-solvers "$image_url"
 fi
 
