@@ -22,4 +22,4 @@ rules:
 ignore: |
   .git/
   .github/
-  clusters/prod/flux.yaml
+  clusters/prod/gotk-components.yaml
