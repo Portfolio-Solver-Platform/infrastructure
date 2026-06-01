@@ -4,6 +4,7 @@ The deployment configuration for PSP.
 
 ## Prerequisites
 
+- Have Docker installed
 - Have [Nix (the package manager)](https://nixos.org/download/) installed
 - Enter the Nix environment: `nix --extra-experimental-features "nix-command flakes" develop`
   - If you have Nix flakes enabled globally, you can instead run `nix develop`
@@ -22,7 +23,7 @@ Deployment:
 - Run `./deployments/local/init <profile> [--cpu <cores>] [--memory <mem>]`
   - `<profile>` can either be `dev` or `dev-prod`, where `dev-prod` is a profile that runs as much with production settings as is possible locally.
   - The `--cpu` and `--memory` can be used to limit the resources given to the local cluster. Its a good idea to set these because the defaults are relatively low.
-- You can access the services through the gateway by using `minikube tunnel`. Thereafter, to get the IP address execute the `access.sh` script. Remember to follow the instructions the script gives you. Note that the `access.sh` script is dependent on the gateway being up.
+- You can access the services through the gateway by using `minikube tunnel`. Thereafter, to get the IP address execute the `access.sh` script. Remember to follow the instructions the script gives you. Note that the `access.sh` script is dependent on the gateway being up (this might tike a while the first time).
 - Initialise the data — see [Data Setup](#data-setup)
 
 Useful information:
