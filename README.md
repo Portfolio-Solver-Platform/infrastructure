@@ -81,7 +81,7 @@ The [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) also documen
 
 ### MiniZinc Setup Script
 
-The `post-data-setup.sh` can be used for a default setup with a MiniZinc problem group, the MiniZinc solver image (supporting popular MiniZinc solvers, such as CP-SAT, Choco, etc.), and sets up MiniZinc problems and instances from a local folder.
+The `post-data-setup.sh` can be used for a default setup with a MiniZinc problem group, the [MiniZinc solvers](https://github.com/Portfolio-Solver-Platform/minizinc-solvers) image (supporting popular MiniZinc solvers, such as CP-SAT, Choco, etc.), and sets up MiniZinc problems and instances from a local folder.
 
 It requires [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) to be installed.
 
