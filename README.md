@@ -88,6 +88,6 @@ It requires [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) to b
 How to use it:
 - Since these actions are administrative, PSP CLI must use the `admin-app` client for authentication: `psp config set client_id admin-app`
 - Log in to PSP CLI: `psp auth login`
-  - If using a production environment, including the `dev-prod` profile, it will prompt you for the secret to the `admin-app` client, which can be found in the secrets manager.
+  - It will prompt you for the secret to the `admin-app` client. In the `dev` profile, this is "admin". In production profile, including `dev-prod`, the secret can be found in the secrets manager.
 - Run the script: `./post-data-setup.sh <problems-dir>`
   - To override the solver image: `MINIZINC_SOLVERS_IMAGE=<url> ./post-data-setup.sh <problems-dir>`
