@@ -77,7 +77,7 @@ The following settings are important for security:
 ## Data Setup
 
 See the [`example-usage` repository](https://github.com/Portfolio-Solver-Platform/example-usage) for some example data and how to use the platform.
-The [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) also documents how PSP can be interacted with through it. 
+The [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) also documents how PSP can be interacted with through it.
 
 ### MiniZinc Setup Script
 
@@ -86,6 +86,7 @@ The `post-data-setup.sh` can be used for a default setup with a MiniZinc problem
 It requires [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) to be installed.
 
 How to use it:
+
 - Since these actions are administrative, PSP CLI must use the `admin-app` client for authentication: `psp config set client_id admin-app`
 - Log in to PSP CLI: `psp auth login`
   - It will prompt you for the secret to the `admin-app` client. In the `dev` profile, this is "admin". In production profile, including `dev-prod`, the secret can be found in the secrets manager.
