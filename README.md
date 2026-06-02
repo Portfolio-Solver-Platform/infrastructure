@@ -76,12 +76,19 @@ The following settings are important for security:
 
 ## Data Setup
 
-Requires [`psp-cli`](https://github.com/Portfolio-Solver-Platform/psp-cli).
+See the [`example-usage` repository](https://github.com/Portfolio-Solver-Platform/example-usage) for some example data and how to use the platform.
+The [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) also documents how PSP can be interacted with through it.
 
-```bash
-psp config set client_id admin-app
-psp auth login
-./post-data-setup.sh <problems-dir>
-```
+### MiniZinc Setup Script
 
-To override the solver image: `MINIZINC_SOLVERS_IMAGE=<url> ./post-data-setup.sh <problems-dir>`
+The `post-data-setup.sh` can be used for a default setup with a MiniZinc problem group, the [MiniZinc solvers](https://github.com/Portfolio-Solver-Platform/minizinc-solvers) image (supporting popular MiniZinc solvers, such as CP-SAT, Choco, etc.), and sets up MiniZinc problems and instances from a local folder.
+
+It requires [PSP CLI](https://github.com/Portfolio-Solver-Platform/psp-cli) to be installed.
+
+How to use it:
+
+- Since these actions are administrative, PSP CLI must use the `admin-app` client for authentication: `psp config set client_id admin-app`
+- Log in to PSP CLI: `psp auth login`
+  - It will prompt you for the secret to the `admin-app` client. In the `dev` profile, this is "admin". In production profile, including `dev-prod`, the secret can be found in the secrets manager.
+- Run the script: `./post-data-setup.sh <problems-dir>`
+  - To override the solver image: `MINIZINC_SOLVERS_IMAGE=<url> ./post-data-setup.sh <problems-dir>`
