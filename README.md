@@ -78,6 +78,8 @@ The following settings are important for security:
 
 Requires [`psp-cli`](https://github.com/Portfolio-Solver-Platform/psp-cli).
 
+See the [`example-usage` repository](https://github.com/Portfolio-Solver-Platform/example-usage) for some example data and how to use the platform.
+
 ```bash
 psp config set client_id admin-app
 psp auth login
